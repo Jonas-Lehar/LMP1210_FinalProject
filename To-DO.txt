@@ -1,0 +1,10 @@
+
+
+17.03.2026 - Jonas Lehar
+- Instead of 19 clusters, let's try only using 18, and having a probability threshold for cluster assignment. So if the assigned cluster
+  probability is less than a cut-off x, that IDR remains truly unasigned. This is better than creating an arbitrary cluster 19, which
+  forces clustering instead of leaving it to the affinity scores. 
+- In general, just fix everything lmao
+
+data - name
+- 
