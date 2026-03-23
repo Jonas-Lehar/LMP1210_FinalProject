@@ -27,8 +27,12 @@ from sklearn.semi_supervised import LabelSpreading  # [web:4][web:12]
 
 
 # Configuration (edit these paths / hyperparameters as needed)
-AFFINITY_CSV = ".\\data\\401_450.csv"          # N x N affinity matrix CSV
-KNOWN_LABELS_CSV = ".\\data\\401_450_test.csv" # CSV with columns 'idr', 'condensate'
+# AFFINITY_CSV = ".\\data\\401_450.csv"          # N x N affinity matrix CSV
+# KNOWN_LABELS_CSV = ".\\data\\401_450_test.csv" # CSV with columns 'idr', 'condensate'
+
+# For MacOS Users (or Linux)
+AFFINITY_CSV = "./data/401_450.csv"          # N x N affinity matrix CSV
+KNOWN_LABELS_CSV = "./data/401_450_test.csv" # CSV with columns 'idr', 'condensate'
 
 # LabelSpreading hyperparameters
 ALPHA = 0.2          # clamping factor
