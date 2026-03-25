@@ -35,8 +35,11 @@ AFFINITY_CSV = "./data/401_450.csv"          # N x N affinity matrix CSV
 KNOWN_LABELS_CSV = "./data/401_450_test.csv" # CSV with columns 'idr', 'condensate'
 
 # LabelSpreading hyperparameters
-ALPHA = 0.2          # clamping factor
-GAMMA = 20.0         # RBF gamma
+ALPHA = 0.5          # clamping factor (0 = hard labels, 1 = fully diffused)
+GAMMA = 7         # RBF gamma (higher values = more localized affinity)
+
+N_NEIGHBOURS = 7     # for KNN kernel (if used instead of RBF)
+
 MAX_ITER = 100
 TOL = 1e-4
 N_JOBS = -1          # use all cores
@@ -126,14 +129,15 @@ def load_known_labels(path: Path, idr_names: np.ndarray, unlabeled_value: int = 
 def run_label_spreading_rbf(
     A: np.ndarray,
     y: np.ndarray,
-    alpha: float = 0.2,
-    gamma: float = 20.0,
+    alpha: float = ALPHA,
+    gamma: float = GAMMA,
+    N_NEIGHBOURS: int = N_NEIGHBOURS,
     max_iter: int = 100,
     tol: float = 1e-4,
     n_jobs: int | None = -1,
 ):
     """
-    Run sklearn.semi_supervised.LabelSpreading with RBF kernel.
+    Run sklearn.semi_supervised.LabelSpreading with RBF/KNN kernel.
 
     Uses rows of A as feature vectors (X = A).
 
@@ -148,8 +152,10 @@ def run_label_spreading_rbf(
     X = A  # (n_samples, n_features)
 
     model = LabelSpreading(
-        kernel="rbf",
-        gamma=gamma,
+        #kernel="rbf",
+        #gamma=gamma,
+        kernel="knn",
+        n_neighbors=N_NEIGHBOURS,
         alpha=alpha,
         max_iter=max_iter,
         tol=tol,
