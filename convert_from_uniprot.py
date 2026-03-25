@@ -5,9 +5,9 @@ import re
 # ---------------------------
 # Input files
 # ---------------------------
-idr_file = "data/201_250.csv"              # can be txt/csv/tsv
+idr_file = "data/151_200.csv"              # can be txt/csv/tsv
 condensate_file = "MSA_chat_small.csv"  # or change to .xlsx below
-output_file = "Cleaned_Data/201_250_test.csv"
+output_file = "Cleaned_Data/151_200_test.csv"
 
 # ---------------------------
 # Read IDR input

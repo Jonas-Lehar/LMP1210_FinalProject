@@ -31,8 +31,8 @@ from sklearn.semi_supervised import LabelSpreading  # [web:4][web:12]
 # KNOWN_LABELS_CSV = ".\\data\\401_450_test.csv" # CSV with columns 'idr', 'condensate'
 
 # For MacOS Users (or Linux)
-AFFINITY_CSV = "./data/401_450.csv"          # N x N affinity matrix CSV
-KNOWN_LABELS_CSV = "./data/401_450_test.csv" # CSV with columns 'idr', 'condensate'
+AFFINITY_CSV = "./data/201_250.csv"          # N x N affinity matrix CSV
+KNOWN_LABELS_CSV = "./Cleaned_Data/201_250_test.csv" # CSV with columns 'idr', 'condensate'
 
 # LabelSpreading hyperparameters
 ALPHA = 0.5          # clamping factor (0 = hard labels, 1 = fully diffused)
@@ -131,7 +131,7 @@ def run_label_spreading_rbf(
     y: np.ndarray,
     alpha: float = ALPHA,
     gamma: float = GAMMA,
-    N_NEIGHBOURS: int = N_NEIGHBOURS,
+    n_neighbors: int = N_NEIGHBOURS,
     max_iter: int = 100,
     tol: float = 1e-4,
     n_jobs: int | None = -1,
@@ -155,7 +155,7 @@ def run_label_spreading_rbf(
         #kernel="rbf",
         #gamma=gamma,
         kernel="knn",
-        n_neighbors=N_NEIGHBOURS,
+        n_neighbors=n_neighbors,
         alpha=alpha,
         max_iter=max_iter,
         tol=tol,
@@ -354,7 +354,8 @@ def main():
         A,
         y,
         alpha=ALPHA,
-        gamma=GAMMA,
+        #gamma=GAMMA,
+        n_neighbors=N_NEIGHBOURS,
         max_iter=MAX_ITER,
         tol=TOL,
         n_jobs=N_JOBS,
