@@ -77,10 +77,10 @@ Q84J91_IDP_1_334,-1
 Q9C9A0_IDP_1_326,-1
 Q9SB47_IDP_1_319,-1
 O23188_N-terminal_1_312,-1
-Q9T014_N-terminal_1_310,-1
+Q9T014_N-terminal_1_310,2
 Q9M9F0_IDP_1_311,-1
 Q6NPP4_middle_138_460,-1
-Q9SJJ3_N-terminal_1_319,-1
+Q9SJJ3_N-terminal_1_319,6
 O22900_IDP_1_337,-1
 O23373_N-terminal_1_332,-1
 Q84LG2_N-terminal_1_314,-1
@@ -174,7 +174,7 @@ Q0WTB8_C-terminal_130_470,-1
 Q9XI36_C-terminal_67_384,-1
 F4IMF6_middle_60_387,-1
 Q5PP28_C-terminal_84_394,-1
-Q9C7E8_C-terminal_125_433,-1
+Q9C7E8_C-terminal_125_433,6
 Q7Y227_C-terminal_256_603,-1
 Q94B77_middle_134_441,-1
 Q8L793_C-terminal_251_587,-1
@@ -203,7 +203,7 @@ P27483_IDP_1_349,-1
 Q56XZ5_C-terminal_188_517,-1
 P0C883_N-terminal_1_315,-1
 Q058M7_C-terminal_87_391,-1
-Q9SRH9_middle_744_1072,-1
+Q9SRH9_middle_744_1072,6
 Q8H1G0_IDP_1_302,-1
 Q9FFY9_N-terminal_1_341,-1
 Q9FLD3_C-terminal_58_386,-1
@@ -217,7 +217,7 @@ Q9SYH4_IDP_1_308,-1
 Q8L500_C-terminal_163_468,-1
 F4IV25_N-terminal_1_341,-1
 Q1PFH6_IDP_1_312,-1
-Q8RY95_middle_183_508,-1
+Q8RY95_middle_183_508,6
 Q564K3_middle_297_615,-1
 Q84WL6_IDP_1_338,-1
 Q9FFI5_C-terminal_165_476,-1
@@ -226,8 +226,8 @@ F4J5R1_C-terminal_384_696,-1
 Q56W79_N-terminal_1_303,-1
 Q9LVQ7_C-terminal_192_500,-1
 F4K4M0_N-terminal_1_306,-1
-O82804_N-terminal_1_317,-1
-O82804_C-terminal_394_695,-1
+O82804_N-terminal_1_317,2
+O82804_C-terminal_394_695,2
 Q6SJR1_middle_145_487,-1
 F4I1G2_IDP_1_307,-1
 F4JP43_C-terminal_1725_2037,-1
@@ -240,7 +240,7 @@ Q8L7A9_C-terminal_630_938,-1
 Q9SB51_middle_112_449,1
 F4KB50_middle_416_722,-1
 Q84JE8_N-terminal_1_339,-1
-Q94KL5_N-terminal_1_304,-1
+Q94KL5_N-terminal_1_304,6
 Q9SID9_IDP_1_328,-1
 F4KFB3_middle_113_444,-1
 Q9SL94_IDP_1_324,-1
@@ -285,11 +285,11 @@ B3H4I1_C-terminal_423_737,-1
 F4KD57_N-terminal_1_339,-1
 Q9LR70_C-terminal_476_801,-1
 P56764_middle_741_1064,-1
-Q9SHG6_N-terminal_1_341,-1
+Q9SHG6_N-terminal_1_341,6
 F4KBH3_IDP_1_307,-1
 Q9SZI6_N-terminal_1_307,-1
 F4K733_middle_225_543,-1
-Q9FL19_C-terminal_81_385,-1
+Q9FL19_C-terminal_81_385,6
 Q9XGX0_IDP_1_331,-1
 F4HS08_N-terminal_1_312,-1
 Q6NLV7_IDP_1_305,-1
@@ -304,7 +304,7 @@ Q9SD38_IDP_1_312,-1
 F4ITB8_C-terminal_126_439,-1
 Q9LF24_middle_37_343,-1
 Q9LF24_middle_382_720,-1
-Q5YDB6_middle_417_731,-1
+Q5YDB6_middle_417_731,6
 F4K0G5_N-terminal_1_330,-1
 Q94AV5_N-terminal_1_332,-1
 F4IT95_IDP_1_310,-1
@@ -386,7 +386,7 @@ Q9LFE0_C-terminal_506_820,-1
 Q9SFZ3_N-terminal_1_334,-1
 Q0WV01_N-terminal_1_309,-1
 Q93XX4_C-terminal_402_751,-1
-Q700C2_middle_140_480,-1
+Q700C2_middle_140_480,6
 F4JKW8_N-terminal_1_334,-1
 F4JVE0_C-terminal_191_534,-1
 Q9FMZ0_IDP_1_337,-1
