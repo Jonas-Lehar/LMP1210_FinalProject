@@ -53,7 +53,7 @@ uniprot_to_cond_num = {}
 
 for _, row in cond_df.iterrows():
     cond_num = row.get("Condensate #", None)
-    match_ids_cell = row.get("Verified Plant Match Uniprot ID", None)
+    match_ids_cell = row.get("CONCATTED", None)
 
     ids = extract_uniprot_ids(match_ids_cell)
 
