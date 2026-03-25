@@ -1,29 +1,18 @@
 import pandas as pd
 import ast
 import re
+import os
+from pathlib import Path
 
 # ---------------------------
-# Input files
+# Input configuration
 # ---------------------------
-idr_file = "data/151_200.csv"              # can be txt/csv/tsv
+data_folder = "data"
 condensate_file = "MSA_chat_small.csv"  # or change to .xlsx below
-output_file = "Cleaned_Data/151_200_test.csv"
+output_folder = "Cleaned_Data"
 
-# ---------------------------
-# Read IDR input
-# Keep only the first column, drop the rest
-# ---------------------------
-idr_df = pd.read_csv(idr_file, sep=None, engine="python")
-idr_df = idr_df.iloc[:, [0]].copy()
-idr_df.columns = ["idr"]
-
-# Clean whitespace
-idr_df["idr"] = idr_df["idr"].astype(str).str.strip()
-
-# Drop empty rows and possible repeated header row
-idr_df = idr_df[idr_df["idr"].notna()]
-idr_df = idr_df[idr_df["idr"] != ""]
-idr_df = idr_df[idr_df["idr"].str.lower() != "idr"]
+# Ensure output folder exists
+os.makedirs(output_folder, exist_ok=True)
 
 # ---------------------------
 # Read condensate table
@@ -103,16 +92,49 @@ def find_condensate_from_full_idr(idr_name, mapping, debug=False):
         print(f"WARNING: multiple matches for {idr_name}: {matches}")
         return matches[0][1]
 
-idr_df["condensate"] = idr_df["idr"].apply(
-    lambda x: find_condensate_from_full_idr(str(x), uniprot_to_cond_num, debug=False)
-).astype(int)
+# ---------------------------
+# Process all CSV files in data folder
+# ---------------------------
+csv_files = sorted([f for f in os.listdir(data_folder) if f.endswith('.csv')])
 
-# Keep only final output columns
-idr_df = idr_df[["idr", "condensate"]]
+print(f"\nFound {len(csv_files)} CSV file(s) in {data_folder}/\n")
 
-# Save
-idr_df.to_csv(output_file, index=False)
+for csv_file in csv_files:
+    idr_file = os.path.join(data_folder, csv_file)
+    
+    # Generate output filename: input name without extension + _test.csv
+    input_name = Path(csv_file).stem
+    output_file = os.path.join(output_folder, f"{input_name}_test.csv")
+    
+    print(f"Processing: {idr_file} -> {output_file}")
+    
+    # ---------------------------
+    # Read IDR input
+    # Keep only the first column, drop the rest
+    # ---------------------------
+    idr_df = pd.read_csv(idr_file, sep=None, engine="python")
+    idr_df = idr_df.iloc[:, [0]].copy()
+    idr_df.columns = ["idr"]
 
-print("\nFinal output:")
-print(idr_df)
-print(f"\nSaved to: {output_file}")
+    # Clean whitespace
+    idr_df["idr"] = idr_df["idr"].astype(str).str.strip()
+
+    # Drop empty rows and possible repeated header row
+    idr_df = idr_df[idr_df["idr"].notna()]
+    idr_df = idr_df[idr_df["idr"] != ""]
+    idr_df = idr_df[idr_df["idr"].str.lower() != "idr"]
+
+    # Add condensate assignments
+    idr_df["condensate"] = idr_df["idr"].apply(
+        lambda x: find_condensate_from_full_idr(str(x), uniprot_to_cond_num, debug=False)
+    ).astype(int)
+
+    # Keep only final output columns
+    idr_df = idr_df[["idr", "condensate"]]
+
+    # Save
+    idr_df.to_csv(output_file, index=False)
+
+    print(f"  ✓ Saved {len(idr_df)} rows\n")
+
+print("All files processed successfully!")
