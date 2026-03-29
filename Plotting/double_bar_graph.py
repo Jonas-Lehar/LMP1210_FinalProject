@@ -6,13 +6,26 @@ df = pd.read_csv("./idr_labelspreading_results.csv")
 
 # --- Label → Condensate name mapping ---
 label_map = {
-    -1: "Unknown",
-    1: "Nucleolus",
-    2: "Nuclear Body",
-    6: "Nuclear Speckle",
-    7: "P-body",
-    16: "Stress Granule",
-    19: "Cajal Body"
+    -1: "Category -1",
+    1: "Nuclear Speckle",
+    2: "Photobodies",
+    3:"ELF3 condensates",
+    4:"GDACs (GBPL defense-activated condensates)",
+    5:"FCA condensates",
+    6:"Nucleolus",
+    7:"D-bodies (Dicing bodies)",
+    8:"Cajal bodies",
+    9:"TMF condensates",
+    10:"ARF condensates",
+    11:"SINCs (SA-induced NPR1 condensates)",
+    12:"FLOE condensates,FLOE1",
+    13:"Stress granules",
+    14:"Processing bodies",
+    15:"LEA condensates",
+    16:"siRNA bodies",
+    17:"STT condensates",
+    18:"Pyrenoid Matrix",
+    19:"Category 19"
 }
 
 # --- Filter out unknowns from known labels ---
