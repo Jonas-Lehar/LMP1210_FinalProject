@@ -1,0 +1,250 @@
+============================================================
+Hyperparameter tuning
+============================================================
+  Skipping 351_400 for tuning (only 9 labeled samples)
+  Skipping 401_450 for tuning (only 5 labeled samples)
+  [1/36] kernel=knn, alpha=0.1, k=3  ->  macro-F1 = 0.156  acc = 0.311
+  [2/36] kernel=knn, alpha=0.1, k=5  ->  macro-F1 = 0.227  acc = 0.614
+  [3/36] kernel=knn, alpha=0.1, k=7  ->  macro-F1 = 0.256  acc = 0.656
+  [4/36] kernel=knn, alpha=0.1, k=10  ->  macro-F1 = 0.245  acc = 0.655
+  [5/36] kernel=knn, alpha=0.1, k=15  ->  macro-F1 = 0.254  acc = 0.679
+  [6/36] kernel=knn, alpha=0.1, k=20  ->  macro-F1 = 0.237  acc = 0.660
+  [7/36] kernel=knn, alpha=0.2, k=3  ->  macro-F1 = 0.165  acc = 0.330
+  [8/36] kernel=knn, alpha=0.2, k=5  ->  macro-F1 = 0.235  acc = 0.641
+  [9/36] kernel=knn, alpha=0.2, k=7  ->  macro-F1 = 0.256  acc = 0.663
+  [10/36] kernel=knn, alpha=0.2, k=10  ->  macro-F1 = 0.247  acc = 0.657
+  [11/36] kernel=knn, alpha=0.2, k=15  ->  macro-F1 = 0.254  acc = 0.679
+  [12/36] kernel=knn, alpha=0.2, k=20  ->  macro-F1 = 0.231  acc = 0.658
+  [13/36] kernel=knn, alpha=0.3, k=3  ->  macro-F1 = 0.173  acc = 0.352
+  [14/36] kernel=knn, alpha=0.3, k=5  ->  macro-F1 = 0.241  acc = 0.649
+  [15/36] kernel=knn, alpha=0.3, k=7  ->  macro-F1 = 0.257  acc = 0.661
+  [16/36] kernel=knn, alpha=0.3, k=10  ->  macro-F1 = 0.247  acc = 0.657
+  [17/36] kernel=knn, alpha=0.3, k=15  ->  macro-F1 = 0.253  acc = 0.681
+  [18/36] kernel=knn, alpha=0.3, k=20  ->  macro-F1 = 0.236  acc = 0.665
+  [19/36] kernel=knn, alpha=0.5, k=3  ->  macro-F1 = 0.178  acc = 0.372
+  [20/36] kernel=knn, alpha=0.5, k=5  ->  macro-F1 = 0.245  acc = 0.660
+  [21/36] kernel=knn, alpha=0.5, k=7  ->  macro-F1 = 0.251  acc = 0.660
+  [22/36] kernel=knn, alpha=0.5, k=10  ->  macro-F1 = 0.254  acc = 0.663
+  [23/36] kernel=knn, alpha=0.5, k=15  ->  macro-F1 = 0.248  acc = 0.676
+  [24/36] kernel=knn, alpha=0.5, k=20  ->  macro-F1 = 0.237  acc = 0.670
+  [25/36] kernel=knn, alpha=0.7, k=3  ->  macro-F1 = 0.176  acc = 0.379
+  [26/36] kernel=knn, alpha=0.7, k=5  ->  macro-F1 = 0.247  acc = 0.655
+  [27/36] kernel=knn, alpha=0.7, k=7  ->  macro-F1 = 0.256  acc = 0.658
+  [28/36] kernel=knn, alpha=0.7, k=10  ->  macro-F1 = 0.247  acc = 0.673
+  [29/36] kernel=knn, alpha=0.7, k=15  ->  macro-F1 = 0.240  acc = 0.674
+  [30/36] kernel=knn, alpha=0.7, k=20  ->  macro-F1 = 0.234  acc = 0.684
+C:\Users\jonas\anaconda3\envs\ml_course\Lib\site-packages\sklearn\semi_supervised\_label_propagation.py:324: ConvergenceWarning: max_iter=100 was reached without convergence.
+  warnings.warn(
+C:\Users\jonas\anaconda3\envs\ml_course\Lib\site-packages\sklearn\semi_supervised\_label_propagation.py:324: ConvergenceWarning: max_iter=100 was reached without convergence.
+  warnings.warn(
+C:\Users\jonas\anaconda3\envs\ml_course\Lib\site-packages\sklearn\semi_supervised\_label_propagation.py:324: ConvergenceWarning: max_iter=100 was reached without convergence.
+  warnings.warn(
+C:\Users\jonas\anaconda3\envs\ml_course\Lib\site-packages\sklearn\semi_supervised\_label_propagation.py:324: ConvergenceWarning: max_iter=100 was reached without convergence.
+  warnings.warn(
+C:\Users\jonas\anaconda3\envs\ml_course\Lib\site-packages\sklearn\semi_supervised\_label_propagation.py:324: ConvergenceWarning: max_iter=100 was reached without convergence.
+  warnings.warn(
+C:\Users\jonas\anaconda3\envs\ml_course\Lib\site-packages\sklearn\semi_supervised\_label_propagation.py:324: ConvergenceWarning: max_iter=100 was reached without convergence.
+  warnings.warn(
+C:\Users\jonas\anaconda3\envs\ml_course\Lib\site-packages\sklearn\semi_supervised\_label_propagation.py:324: ConvergenceWarning: max_iter=100 was reached without convergence.
+  warnings.warn(
+C:\Users\jonas\anaconda3\envs\ml_course\Lib\site-packages\sklearn\semi_supervised\_label_propagation.py:324: ConvergenceWarning: max_iter=100 was reached without convergence.
+  warnings.warn(
+C:\Users\jonas\anaconda3\envs\ml_course\Lib\site-packages\sklearn\semi_supervised\_label_propagation.py:324: ConvergenceWarning: max_iter=100 was reached without convergence.
+  warnings.warn(
+C:\Users\jonas\anaconda3\envs\ml_course\Lib\site-packages\sklearn\semi_supervised\_label_propagation.py:324: ConvergenceWarning: max_iter=100 was reached without convergence.
+  warnings.warn(
+C:\Users\jonas\anaconda3\envs\ml_course\Lib\site-packages\sklearn\semi_supervised\_label_propagation.py:324: ConvergenceWarning: max_iter=100 was reached without convergence.
+  warnings.warn(
+C:\Users\jonas\anaconda3\envs\ml_course\Lib\site-packages\sklearn\semi_supervised\_label_propagation.py:324: ConvergenceWarning: max_iter=100 was reached without convergence.
+  warnings.warn(
+C:\Users\jonas\anaconda3\envs\ml_course\Lib\site-packages\sklearn\semi_supervised\_label_propagation.py:324: ConvergenceWarning: max_iter=100 was reached without convergence.
+  warnings.warn(
+C:\Users\jonas\anaconda3\envs\ml_course\Lib\site-packages\sklearn\semi_supervised\_label_propagation.py:324: ConvergenceWarning: max_iter=100 was reached without convergence.
+  warnings.warn(
+C:\Users\jonas\anaconda3\envs\ml_course\Lib\site-packages\sklearn\semi_supervised\_label_propagation.py:324: ConvergenceWarning: max_iter=100 was reached without convergence.
+  warnings.warn(
+C:\Users\jonas\anaconda3\envs\ml_course\Lib\site-packages\sklearn\semi_supervised\_label_propagation.py:324: ConvergenceWarning: max_iter=100 was reached without convergence.
+  warnings.warn(
+C:\Users\jonas\anaconda3\envs\ml_course\Lib\site-packages\sklearn\semi_supervised\_label_propagation.py:324: ConvergenceWarning: max_iter=100 was reached without convergence.
+  warnings.warn(
+C:\Users\jonas\anaconda3\envs\ml_course\Lib\site-packages\sklearn\semi_supervised\_label_propagation.py:324: ConvergenceWarning: max_iter=100 was reached without convergence.
+  warnings.warn(
+C:\Users\jonas\anaconda3\envs\ml_course\Lib\site-packages\sklearn\semi_supervised\_label_propagation.py:324: ConvergenceWarning: max_iter=100 was reached without convergence.
+  warnings.warn(
+C:\Users\jonas\anaconda3\envs\ml_course\Lib\site-packages\sklearn\semi_supervised\_label_propagation.py:324: ConvergenceWarning: max_iter=100 was reached without convergence.
+  warnings.warn(
+C:\Users\jonas\anaconda3\envs\ml_course\Lib\site-packages\sklearn\semi_supervised\_label_propagation.py:324: ConvergenceWarning: max_iter=100 was reached without convergence.
+  warnings.warn(
+C:\Users\jonas\anaconda3\envs\ml_course\Lib\site-packages\sklearn\semi_supervised\_label_propagation.py:324: ConvergenceWarning: max_iter=100 was reached without convergence.
+  warnings.warn(
+C:\Users\jonas\anaconda3\envs\ml_course\Lib\site-packages\sklearn\semi_supervised\_label_propagation.py:324: ConvergenceWarning: max_iter=100 was reached without convergence.
+  warnings.warn(
+C:\Users\jonas\anaconda3\envs\ml_course\Lib\site-packages\sklearn\semi_supervised\_label_propagation.py:324: ConvergenceWarning: max_iter=100 was reached without convergence.
+  warnings.warn(
+C:\Users\jonas\anaconda3\envs\ml_course\Lib\site-packages\sklearn\semi_supervised\_label_propagation.py:324: ConvergenceWarning: max_iter=100 was reached without convergence.
+  warnings.warn(
+  [31/36] kernel=knn, alpha=0.9, k=3  ->  macro-F1 = 0.175  acc = 0.377
+C:\Users\jonas\anaconda3\envs\ml_course\Lib\site-packages\sklearn\semi_supervised\_label_propagation.py:324: ConvergenceWarning: max_iter=100 was reached without convergence.
+  warnings.warn(
+C:\Users\jonas\anaconda3\envs\ml_course\Lib\site-packages\sklearn\semi_supervised\_label_propagation.py:324: ConvergenceWarning: max_iter=100 was reached without convergence.
+  warnings.warn(
+C:\Users\jonas\anaconda3\envs\ml_course\Lib\site-packages\sklearn\semi_supervised\_label_propagation.py:324: ConvergenceWarning: max_iter=100 was reached without convergence.
+  warnings.warn(
+C:\Users\jonas\anaconda3\envs\ml_course\Lib\site-packages\sklearn\semi_supervised\_label_propagation.py:324: ConvergenceWarning: max_iter=100 was reached without convergence.
+  warnings.warn(
+C:\Users\jonas\anaconda3\envs\ml_course\Lib\site-packages\sklearn\semi_supervised\_label_propagation.py:324: ConvergenceWarning: max_iter=100 was reached without convergence.
+  warnings.warn(
+C:\Users\jonas\anaconda3\envs\ml_course\Lib\site-packages\sklearn\semi_supervised\_label_propagation.py:324: ConvergenceWarning: max_iter=100 was reached without convergence.
+  warnings.warn(
+C:\Users\jonas\anaconda3\envs\ml_course\Lib\site-packages\sklearn\semi_supervised\_label_propagation.py:324: ConvergenceWarning: max_iter=100 was reached without convergence.
+  warnings.warn(
+C:\Users\jonas\anaconda3\envs\ml_course\Lib\site-packages\sklearn\semi_supervised\_label_propagation.py:324: ConvergenceWarning: max_iter=100 was reached without convergence.
+  warnings.warn(
+C:\Users\jonas\anaconda3\envs\ml_course\Lib\site-packages\sklearn\semi_supervised\_label_propagation.py:324: ConvergenceWarning: max_iter=100 was reached without convergence.
+  warnings.warn(
+C:\Users\jonas\anaconda3\envs\ml_course\Lib\site-packages\sklearn\semi_supervised\_label_propagation.py:324: ConvergenceWarning: max_iter=100 was reached without convergence.
+  warnings.warn(
+C:\Users\jonas\anaconda3\envs\ml_course\Lib\site-packages\sklearn\semi_supervised\_label_propagation.py:324: ConvergenceWarning: max_iter=100 was reached without convergence.
+  warnings.warn(
+C:\Users\jonas\anaconda3\envs\ml_course\Lib\site-packages\sklearn\semi_supervised\_label_propagation.py:324: ConvergenceWarning: max_iter=100 was reached without convergence.
+  warnings.warn(
+C:\Users\jonas\anaconda3\envs\ml_course\Lib\site-packages\sklearn\semi_supervised\_label_propagation.py:324: ConvergenceWarning: max_iter=100 was reached without convergence.
+  warnings.warn(
+C:\Users\jonas\anaconda3\envs\ml_course\Lib\site-packages\sklearn\semi_supervised\_label_propagation.py:324: ConvergenceWarning: max_iter=100 was reached without convergence.
+  warnings.warn(
+C:\Users\jonas\anaconda3\envs\ml_course\Lib\site-packages\sklearn\semi_supervised\_label_propagation.py:324: ConvergenceWarning: max_iter=100 was reached without convergence.
+  warnings.warn(
+C:\Users\jonas\anaconda3\envs\ml_course\Lib\site-packages\sklearn\semi_supervised\_label_propagation.py:324: ConvergenceWarning: max_iter=100 was reached without convergence.
+  warnings.warn(
+C:\Users\jonas\anaconda3\envs\ml_course\Lib\site-packages\sklearn\semi_supervised\_label_propagation.py:324: ConvergenceWarning: max_iter=100 was reached without convergence.
+  warnings.warn(
+C:\Users\jonas\anaconda3\envs\ml_course\Lib\site-packages\sklearn\semi_supervised\_label_propagation.py:324: ConvergenceWarning: max_iter=100 was reached without convergence.
+  warnings.warn(
+C:\Users\jonas\anaconda3\envs\ml_course\Lib\site-packages\sklearn\semi_supervised\_label_propagation.py:324: ConvergenceWarning: max_iter=100 was reached without convergence.
+  warnings.warn(
+  [32/36] kernel=knn, alpha=0.9, k=5  ->  macro-F1 = 0.257  acc = 0.666
+C:\Users\jonas\anaconda3\envs\ml_course\Lib\site-packages\sklearn\semi_supervised\_label_propagation.py:324: ConvergenceWarning: max_iter=100 was reached without convergence.
+  warnings.warn(
+C:\Users\jonas\anaconda3\envs\ml_course\Lib\site-packages\sklearn\semi_supervised\_label_propagation.py:324: ConvergenceWarning: max_iter=100 was reached without convergence.
+  warnings.warn(
+C:\Users\jonas\anaconda3\envs\ml_course\Lib\site-packages\sklearn\semi_supervised\_label_propagation.py:324: ConvergenceWarning: max_iter=100 was reached without convergence.
+  warnings.warn(
+C:\Users\jonas\anaconda3\envs\ml_course\Lib\site-packages\sklearn\semi_supervised\_label_propagation.py:324: ConvergenceWarning: max_iter=100 was reached without convergence.
+  warnings.warn(
+C:\Users\jonas\anaconda3\envs\ml_course\Lib\site-packages\sklearn\semi_supervised\_label_propagation.py:324: ConvergenceWarning: max_iter=100 was reached without convergence.
+  warnings.warn(
+C:\Users\jonas\anaconda3\envs\ml_course\Lib\site-packages\sklearn\semi_supervised\_label_propagation.py:324: ConvergenceWarning: max_iter=100 was reached without convergence.
+  warnings.warn(
+C:\Users\jonas\anaconda3\envs\ml_course\Lib\site-packages\sklearn\semi_supervised\_label_propagation.py:324: ConvergenceWarning: max_iter=100 was reached without convergence.
+  warnings.warn(
+C:\Users\jonas\anaconda3\envs\ml_course\Lib\site-packages\sklearn\semi_supervised\_label_propagation.py:324: ConvergenceWarning: max_iter=100 was reached without convergence.
+  warnings.warn(
+C:\Users\jonas\anaconda3\envs\ml_course\Lib\site-packages\sklearn\semi_supervised\_label_propagation.py:324: ConvergenceWarning: max_iter=100 was reached without convergence.
+  warnings.warn(
+  [33/36] kernel=knn, alpha=0.9, k=7  ->  macro-F1 = 0.245  acc = 0.674
+C:\Users\jonas\anaconda3\envs\ml_course\Lib\site-packages\sklearn\semi_supervised\_label_propagation.py:324: ConvergenceWarning: max_iter=100 was reached without convergence.
+  warnings.warn(
+C:\Users\jonas\anaconda3\envs\ml_course\Lib\site-packages\sklearn\semi_supervised\_label_propagation.py:324: ConvergenceWarning: max_iter=100 was reached without convergence.
+  warnings.warn(
+C:\Users\jonas\anaconda3\envs\ml_course\Lib\site-packages\sklearn\semi_supervised\_label_propagation.py:324: ConvergenceWarning: max_iter=100 was reached without convergence.
+  warnings.warn(
+C:\Users\jonas\anaconda3\envs\ml_course\Lib\site-packages\sklearn\semi_supervised\_label_propagation.py:324: ConvergenceWarning: max_iter=100 was reached without convergence.
+  warnings.warn(
+  [34/36] kernel=knn, alpha=0.9, k=10  ->  macro-F1 = 0.263  acc = 0.712
+  [35/36] kernel=knn, alpha=0.9, k=15  ->  macro-F1 = 0.253  acc = 0.724
+  [36/36] kernel=knn, alpha=0.9, k=20  ->  macro-F1 = 0.243  acc = 0.726
+
+  Saved tuning results to results\hyperparam_tuning.csv
+  Saved tuning heatmap to results\hyperparam_heatmap_knn.png
+
+  Best params: kernel=knn, alpha=0.9, k=10  (macro-F1 = 0.263, acc = 0.712)
+
+Using tuned params: kernel=knn, alpha=0.9, n_neighbors=10
+
+============================================================
+Batch: 100_150
+  Affinity : data\100_150.csv
+  Labels   : Cleaned_Data\100_150_test.csv
+  IDRs: 3740  |  Labeled: 162
+C:\Users\jonas\anaconda3\envs\ml_course\Lib\site-packages\sklearn\semi_supervised\_label_propagation.py:324: ConvergenceWarning: max_iter=100 was reached without convergence.
+  warnings.warn(
+C:\Users\jonas\anaconda3\envs\ml_course\Lib\site-packages\sklearn\semi_supervised\_label_propagation.py:324: ConvergenceWarning: max_iter=100 was reached without convergence.
+  warnings.warn(
+C:\Users\jonas\anaconda3\envs\ml_course\Lib\site-packages\sklearn\semi_supervised\_label_propagation.py:324: ConvergenceWarning: max_iter=100 was reached without convergence.
+  warnings.warn(
+C:\Users\jonas\anaconda3\envs\ml_course\Lib\site-packages\sklearn\semi_supervised\_label_propagation.py:324: ConvergenceWarning: max_iter=100 was reached without convergence.
+  warnings.warn(
+  LOO macro-F1 (5 repeats, 20% held out): 0.223  acc: 0.762
+C:\Users\jonas\anaconda3\envs\ml_course\Lib\site-packages\sklearn\semi_supervised\_label_propagation.py:324: ConvergenceWarning: max_iter=100 was reached without convergence.
+  warnings.warn(
+  ARI (HC vs LS): -0.004
+
+============================================================
+Batch: 151_200
+  Affinity : data\151_200.csv
+  Labels   : Cleaned_Data\151_200_test.csv
+  IDRs: 1767  |  Labeled: 75
+  LOO macro-F1 (5 repeats, 20% held out): 0.302  acc: 0.547
+  ARI (HC vs LS): 0.019
+
+============================================================
+Batch: 201_250
+  Affinity : data\201_250.csv
+  Labels   : Cleaned_Data\201_250_test.csv
+  IDRs: 1027  |  Labeled: 62
+  LOO macro-F1 (5 repeats, 20% held out): 0.522  acc: 0.800
+  ARI (HC vs LS): -0.007
+
+============================================================
+Batch: 251_300
+  Affinity : data\251_300.csv
+  Labels   : Cleaned_Data\251_300_test.csv
+  IDRs: 591  |  Labeled: 16
+  LOO macro-F1 (5 repeats, 20% held out): 0.419  acc: 0.533
+  ARI (HC vs LS): -0.008
+
+============================================================
+Batch: 301_350
+  Affinity : data\301_350.csv
+  Labels   : Cleaned_Data\301_350_test.csv
+  IDRs: 393  |  Labeled: 15
+  LOO macro-F1 (5 repeats, 20% held out): 0.247  acc: 0.467
+  ARI (HC vs LS): 0.001
+
+============================================================
+Batch: 351_400
+  Affinity : data\351_400.csv
+  Labels   : Cleaned_Data\351_400_test.csv
+  IDRs: 282  |  Labeled: 9
+  LOO macro-F1 (5 repeats, 20% held out): 0.400  acc: 0.400
+  ARI (HC vs LS): -0.015
+
+============================================================
+Batch: 401_450
+  Affinity : data\401_450.csv
+  Labels   : Cleaned_Data\401_450_test.csv
+  IDRs: 163  |  Labeled: 5
+  LOO macro-F1 (5 repeats, 20% held out): 0.600  acc: 0.600
+  ARI (HC vs LS): 0.078
+
+============================================================
+Batch: 50_99
+  Affinity : data\50_99.csv
+  Labels   : Cleaned_Data\50_99_test.csv
+  IDRs: 8889  |  Labeled: 297
+  LOO macro-F1 (5 repeats, 20% held out): 0.214  acc: 0.729
+  ARI (HC vs LS): 0.003
+
+Wrote combined results to results\all_results.csv
+
+Global LOO macro-F1: 0.112  acc: 0.708
+
+ARI scores (Hierarchical Clustering vs LabelSpreading):
+  100_150: -0.004
+  151_200: 0.019
+  201_250: -0.007
+  251_300: -0.008
+  301_350: 0.001
+  351_400: -0.015
+  401_450: 0.078
+  50_99: 0.003

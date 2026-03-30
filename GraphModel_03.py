@@ -19,7 +19,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.semi_supervised import LabelSpreading
-from sklearn.metrics import confusion_matrix, adjusted_rand_score
+from sklearn.metrics import confusion_matrix, adjusted_rand_score, f1_score
 from sklearn.cluster import AgglomerativeClustering
 
 # ---------------------------------------------------------------------------
@@ -41,8 +41,9 @@ CONFIDENCE_THRESHOLD = 0.6
 UNKNOWN_LABEL        = 19
 
 # Leave-one-out evaluation: fraction of known labels to mask per run
-LOO_FRACTION = 0.2   # hold out 20% of known labels for accuracy estimation
+LOO_FRACTION = 0.2   # hold out 20% of known labels per repeat
 LOO_SEED     = 42
+LOO_REPEATS  = 5     # number of random splits to average over (reduces noise)
 
 # ---------------------------------------------------------------------------
 # HC size limit
@@ -150,29 +151,56 @@ def build_results_df(idr_names, y_known, predicted_labels, final_labels,
 # Evaluation: leave-one-out accuracy
 # ---------------------------------------------------------------------------
 
-def loo_accuracy(A, y, fraction=LOO_FRACTION, seed=LOO_SEED, **kwargs):
+def loo_accuracy(A, y, fraction=LOO_FRACTION, seed=LOO_SEED,
+                 n_repeats=LOO_REPEATS, **kwargs):
     """
-    Mask `fraction` of known labels, run LabelSpreading, report accuracy
-    on the held-out set. Returns (accuracy, y_true, y_pred).
+    Repeated random holdout evaluation.
+
+    Masks `fraction` of known labels `n_repeats` times (different random
+    splits each time), runs LabelSpreading on each, and returns the mean
+    macro-F1 and accuracy across repeats.
+
+    Using macro-F1 as the primary metric because class 6 dominates the label
+    distribution (~76% of labeled IDRs). Accuracy alone would reward a model
+    that just predicts class 6 for everything. Macro-F1 weights all classes
+    equally regardless of size.
+
+    Returns (mean_f1, mean_acc, y_true_all, y_pred_all)
+        where y_true_all / y_pred_all are concatenated across all repeats
+        (useful for building a confusion matrix).
     """
-    rng = np.random.default_rng(seed)
     labeled_idx = np.where(y != -1)[0]
 
     if len(labeled_idx) < 5:
-        return None, None, None
+        return None, None, None, None
 
-    n_hold   = max(1, int(len(labeled_idx) * fraction))
-    hold_idx = rng.choice(labeled_idx, size=n_hold, replace=False)
+    f1s, accs = [], []
+    y_true_all, y_pred_all = [], []
 
-    y_masked = y.copy()
-    y_masked[hold_idx] = -1
+    for rep in range(n_repeats):
+        rng      = np.random.default_rng(seed + rep)
+        n_hold   = max(1, int(len(labeled_idx) * fraction))
+        hold_idx = rng.choice(labeled_idx, size=n_hold, replace=False)
 
-    _, pred, _ = run_label_spreading(A, y_masked, **kwargs)
+        y_masked = y.copy()
+        y_masked[hold_idx] = -1
 
-    y_true = y[hold_idx]
-    y_pred = pred[hold_idx]
-    acc = (y_true == y_pred).mean()
-    return acc, y_true, y_pred
+        _, pred, _ = run_label_spreading(A, y_masked, **kwargs)
+
+        y_true = y[hold_idx]
+        y_pred = pred[hold_idx]
+
+        # macro-F1: unweighted mean across classes present in y_true
+        f1  = f1_score(y_true, y_pred, average="macro", zero_division=0)
+        acc = (y_true == y_pred).mean()
+
+        f1s.append(f1)
+        accs.append(acc)
+        y_true_all.extend(y_true.tolist())
+        y_pred_all.extend(y_pred.tolist())
+
+    return float(np.mean(f1s)), float(np.mean(accs)), \
+           np.array(y_true_all), np.array(y_pred_all)
 
 
 # ---------------------------------------------------------------------------
@@ -234,8 +262,10 @@ def tune_hyperparameters(pairs):
                  + (f"k={k}" if kernel == "knn" else f"gamma={gamma}"))
 
         accs = []
+        f1s  = []
+        weights = []
         for batch, A, y in datasets:
-            acc, _, _ = loo_accuracy(
+            f1, acc, _, _ = loo_accuracy(
                 A, y,
                 alpha=alpha,
                 n_neighbors=k if k is not None else N_NEIGHBOURS,
@@ -245,12 +275,22 @@ def tune_hyperparameters(pairs):
                 tol=TOL,
                 n_jobs=N_JOBS,
             )
-            if acc is not None:
+            if f1 is not None:
+                n_labeled = int((y != -1).sum())
+                f1s.append(f1)
                 accs.append(acc)
+                weights.append(n_labeled)
 
-        mean_acc = float(np.mean(accs)) if accs else float("nan")
-        print(f"  [{idx+1}/{total}] {label}  ->  mean LOO acc = {mean_acc:.3f}")
-        records.append({**params, "mean_loo_acc": mean_acc})
+        # Weighted mean by number of labeled samples per batch
+        if f1s:
+            w = np.array(weights, dtype=float)
+            mean_f1  = float(np.average(f1s,  weights=w))
+            mean_acc = float(np.average(accs, weights=w))
+        else:
+            mean_f1 = mean_acc = float("nan")
+
+        print(f"  [{idx+1}/{total}] {label}  ->  macro-F1 = {mean_f1:.3f}  acc = {mean_acc:.3f}")
+        records.append({**params, "mean_macro_f1": mean_f1, "mean_acc": mean_acc})
 
     results_df = pd.DataFrame(records)
     csv_path = OUTPUT_DIR / "hyperparam_tuning.csv"
@@ -262,34 +302,35 @@ def tune_hyperparameters(pairs):
         sub = results_df[results_df["kernel"] == kernel]
         if kernel == "knn":
             pivot = sub.pivot(index="alpha", columns="n_neighbors",
-                              values="mean_loo_acc")
+                              values="mean_macro_f1")
             xlabel, ylabel = "n_neighbors", "alpha"
         else:
             pivot = sub.pivot(index="alpha", columns="gamma",
-                              values="mean_loo_acc")
+                              values="mean_macro_f1")
             xlabel, ylabel = "gamma", "alpha"
 
         fig, ax = plt.subplots(figsize=(max(6, len(pivot.columns)), max(4, len(pivot))))
         sns.heatmap(pivot, annot=True, fmt=".3f", cmap="YlGnBu",
-                    cbar_kws={"label": "Mean LOO accuracy"}, ax=ax)
+                    cbar_kws={"label": "Weighted mean macro-F1"}, ax=ax)
         ax.set_xlabel(xlabel)
         ax.set_ylabel(ylabel)
-        ax.set_title(f"Hyperparameter tuning — kernel={kernel}")
+        ax.set_title(f"Hyperparameter tuning — kernel={kernel}\n"
+                     f"(macro-F1, {LOO_REPEATS} repeats, weighted by labeled count)")
         plt.tight_layout()
         heatmap_path = OUTPUT_DIR / f"hyperparam_heatmap_{kernel}.png"
         plt.savefig(heatmap_path, dpi=150)
         plt.close()
         print(f"  Saved tuning heatmap to {heatmap_path}")
 
-    # Pick best params
-    best_row = results_df.loc[results_df["mean_loo_acc"].idxmax()]
+    # Pick best params by macro-F1
+    best_row = results_df.loc[results_df["mean_macro_f1"].idxmax()]
     best_alpha  = best_row["alpha"]
     best_k      = best_row["n_neighbors"]
     best_kernel = best_row["kernel"]
     best_gamma  = best_row["gamma"]
     print(f"\n  Best params: kernel={best_kernel}, alpha={best_alpha}, "
           + (f"k={best_k}" if best_kernel == "knn" else f"gamma={best_gamma}")
-          + f"  (mean LOO acc = {best_row['mean_loo_acc']:.3f})")
+          + f"  (macro-F1 = {best_row['mean_macro_f1']:.3f}, acc = {best_row['mean_acc']:.3f})")
 
     return best_alpha, best_k, best_kernel, best_gamma
 
@@ -480,19 +521,19 @@ def main():
         print(f"  IDRs: {len(idr_names)}  |  Labeled: {n_labeled}")
 
         # --- Leave-one-out accuracy ---
-        acc, yt, yp = loo_accuracy(
+        f1, acc, yt, yp = loo_accuracy(
             A, y,
             alpha=alpha, n_neighbors=n_neighbors, kernel=kernel, gamma=gamma,
             max_iter=MAX_ITER, tol=TOL, n_jobs=N_JOBS,
         )
-        if acc is not None:
-            print(f"  LOO accuracy ({int(LOO_FRACTION*100)}% held out): {acc:.3f}")
+        if f1 is not None:
+            print(f"  LOO macro-F1 ({LOO_REPEATS} repeats, {int(LOO_FRACTION*100)}% held out): {f1:.3f}  acc: {acc:.3f}")
             loo_y_true_all.extend(yt.tolist())
             loo_y_pred_all.extend(yp.tolist())
             plot_confusion_matrix(
                 yt, yp,
                 OUTPUT_DIR / f"{batch}_confusion.png",
-                title=f"{batch} — LOO confusion matrix (acc={acc:.2f})"
+                title=f"{batch} — LOO confusion matrix (F1={f1:.2f}, acc={acc:.2f})"
             )
         else:
             print("  Skipping LOO (too few labeled samples)")
@@ -547,8 +588,9 @@ def main():
             OUTPUT_DIR / "global_confusion.png",
             title="Global LOO confusion matrix (all batches)"
         )
+        global_f1  = f1_score(loo_y_true_all, loo_y_pred_all, average="macro", zero_division=0)
         global_acc = (np.array(loo_y_true_all) == np.array(loo_y_pred_all)).mean()
-        print(f"\nGlobal LOO accuracy: {global_acc:.3f}")
+        print(f"\nGlobal LOO macro-F1: {global_f1:.3f}  acc: {global_acc:.3f}")
 
     # --- ARI summary ---
     print("\nARI scores (Hierarchical Clustering vs LabelSpreading):")
