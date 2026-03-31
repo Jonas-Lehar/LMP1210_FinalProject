@@ -1,0 +1,114 @@
+
+Using fixed params: kernel=knn, n_neighbors=7
+
+============================================================
+Batch: 100_150
+  Affinity : data\100_150.csv
+  Labels   : Cleaned_Data\100_150_test.csv
+  IDRs: 3740  |  Labeled: 162
+  LOO macro-F1 (5 repeats, 20% held out): 0.201  acc: 0.738
+  Skipping HC comparison for 100_150 (n=3740 > 2000, SKIP_HC_LARGE=True)
+
+============================================================
+Batch: 151_200
+  Affinity : data\151_200.csv
+  Labels   : Cleaned_Data\151_200_test.csv
+  IDRs: 1767  |  Labeled: 75
+  LOO macro-F1 (5 repeats, 20% held out): 0.245  acc: 0.560
+  ARI (HC vs LP): 0.030
+
+============================================================
+Batch: 201_250
+  Affinity : data\201_250.csv
+  Labels   : Cleaned_Data\201_250_test.csv
+  IDRs: 1027  |  Labeled: 62
+  LOO macro-F1 (5 repeats, 20% held out): 0.378  acc: 0.767
+  ARI (HC vs LP): -0.009
+
+============================================================
+Batch: 251_300
+  Affinity : data\251_300.csv
+  Labels   : Cleaned_Data\251_300_test.csv
+  IDRs: 591  |  Labeled: 16
+C:\Users\jonas\anaconda3\envs\ml_course\Lib\site-packages\sklearn\semi_supervised\_label_propagation.py:324: ConvergenceWarning: max_iter=1000 was reached without convergence.
+  warnings.warn(
+C:\Users\jonas\anaconda3\envs\ml_course\Lib\site-packages\sklearn\semi_supervised\_label_propagation.py:324: ConvergenceWarning: max_iter=1000 was reached without convergence.
+  warnings.warn(
+C:\Users\jonas\anaconda3\envs\ml_course\Lib\site-packages\sklearn\semi_supervised\_label_propagation.py:324: ConvergenceWarning: max_iter=1000 was reached without convergence.
+  warnings.warn(
+C:\Users\jonas\anaconda3\envs\ml_course\Lib\site-packages\sklearn\semi_supervised\_label_propagation.py:324: ConvergenceWarning: max_iter=1000 was reached without convergence.
+  warnings.warn(
+  LOO macro-F1 (5 repeats, 20% held out): 0.288  acc: 0.467
+C:\Users\jonas\anaconda3\envs\ml_course\Lib\site-packages\sklearn\semi_supervised\_label_propagation.py:324: ConvergenceWarning: max_iter=1000 was reached without convergence.
+  warnings.warn(
+  ARI (HC vs LP): -0.008
+
+============================================================
+Batch: 301_350
+  Affinity : data\301_350.csv
+  Labels   : Cleaned_Data\301_350_test.csv
+  IDRs: 393  |  Labeled: 15
+  LOO macro-F1 (5 repeats, 20% held out): 0.238  acc: 0.400
+  ARI (HC vs LP): 0.008
+
+============================================================
+Batch: 351_400
+  Affinity : data\351_400.csv
+  Labels   : Cleaned_Data\351_400_test.csv
+  IDRs: 282  |  Labeled: 9
+C:\Users\jonas\anaconda3\envs\ml_course\Lib\site-packages\sklearn\semi_supervised\_label_propagation.py:324: ConvergenceWarning: max_iter=1000 was reached without convergence.
+  warnings.warn(
+C:\Users\jonas\anaconda3\envs\ml_course\Lib\site-packages\sklearn\semi_supervised\_label_propagation.py:324: ConvergenceWarning: max_iter=1000 was reached without convergence.
+  warnings.warn(
+C:\Users\jonas\anaconda3\envs\ml_course\Lib\site-packages\sklearn\semi_supervised\_label_propagation.py:324: ConvergenceWarning: max_iter=1000 was reached without convergence.
+  warnings.warn(
+C:\Users\jonas\anaconda3\envs\ml_course\Lib\site-packages\sklearn\semi_supervised\_label_propagation.py:324: ConvergenceWarning: max_iter=1000 was reached without convergence.
+  warnings.warn(
+C:\Users\jonas\anaconda3\envs\ml_course\Lib\site-packages\sklearn\semi_supervised\_label_propagation.py:324: ConvergenceWarning: max_iter=1000 was reached without convergence.
+  warnings.warn(
+  LOO macro-F1 (5 repeats, 20% held out): 0.400  acc: 0.400
+C:\Users\jonas\anaconda3\envs\ml_course\Lib\site-packages\sklearn\semi_supervised\_label_propagation.py:324: ConvergenceWarning: max_iter=1000 was reached without convergence.
+  warnings.warn(
+  ARI (HC vs LP): -0.015
+
+============================================================
+Batch: 401_450
+  Affinity : data\401_450.csv
+  Labels   : Cleaned_Data\401_450_test.csv
+  IDRs: 163  |  Labeled: 5
+C:\Users\jonas\anaconda3\envs\ml_course\Lib\site-packages\sklearn\semi_supervised\_label_propagation.py:324: ConvergenceWarning: max_iter=1000 was reached without convergence.
+  warnings.warn(
+C:\Users\jonas\anaconda3\envs\ml_course\Lib\site-packages\sklearn\semi_supervised\_label_propagation.py:324: ConvergenceWarning: max_iter=1000 was reached without convergence.
+  warnings.warn(
+C:\Users\jonas\anaconda3\envs\ml_course\Lib\site-packages\sklearn\semi_supervised\_label_propagation.py:324: ConvergenceWarning: max_iter=1000 was reached without convergence.
+  warnings.warn(
+C:\Users\jonas\anaconda3\envs\ml_course\Lib\site-packages\sklearn\semi_supervised\_label_propagation.py:324: ConvergenceWarning: max_iter=1000 was reached without convergence.
+  warnings.warn(
+C:\Users\jonas\anaconda3\envs\ml_course\Lib\site-packages\sklearn\semi_supervised\_label_propagation.py:324: ConvergenceWarning: max_iter=1000 was reached without convergence.
+  warnings.warn(
+  LOO macro-F1 (5 repeats, 20% held out): 0.600  acc: 0.600
+C:\Users\jonas\anaconda3\envs\ml_course\Lib\site-packages\sklearn\semi_supervised\_label_propagation.py:324: ConvergenceWarning: max_iter=1000 was reached without convergence.
+  warnings.warn(
+  ARI (HC vs LP): 0.017
+
+============================================================
+Batch: 50_99
+  Affinity : data\50_99.csv
+  Labels   : Cleaned_Data\50_99_test.csv
+  IDRs: 8889  |  Labeled: 297
+  LOO macro-F1 (5 repeats, 20% held out): 0.245  acc: 0.773
+  Skipping HC comparison for 50_99 (n=8889 > 2000, SKIP_HC_LARGE=True)
+
+Wrote combined results to results_labelprop\all_results.csv
+
+Global LOO macro-F1: 0.102  acc: 0.717
+
+ARI scores (Hierarchical Clustering vs LabelPropagation):
+  100_150: skipped (SKIP_HC_LARGE=True or matrix too large)
+  151_200: 0.030
+  201_250: -0.009
+  251_300: -0.008
+  301_350: 0.008
+  351_400: -0.015
+  401_450: 0.017
+  50_99: skipped (SKIP_HC_LARGE=True or matrix too large)

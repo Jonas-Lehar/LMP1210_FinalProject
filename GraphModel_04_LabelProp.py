@@ -1,11 +1,17 @@
 #!/usr/bin/env python3
 """
-Semi-supervised LabelSpreading on IDR affinity matrices.
-Loops through all matrix/label pairs, aggregates results, and produces
-evaluation plots including leave-one-out accuracy, confusion matrix,
-per-class confidence distributions, and cluster-sorted heatmaps.
+Semi-supervised LabelPropagation on IDR affinity matrices.
+Identical pipeline to GraphModel_03.py but uses LabelPropagation instead of
+LabelSpreading.
 
-Usage: python GraphModel_03.py
+Key difference: LabelPropagation hard-clamps known labels (alpha is not a
+parameter — labeled nodes never change). This is appropriate when known labels
+are ground truth and should not be softened during propagation.
+
+Hyperparameter search tunes k (and gamma for RBF) only — alpha is not tuned
+since it does not exist in LabelPropagation.
+
+Usage: python GraphModel_04_LabelProp.py
 """
 
 from pathlib import Path
@@ -18,7 +24,7 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import seaborn as sns
-from sklearn.semi_supervised import LabelSpreading
+from sklearn.semi_supervised import LabelPropagation
 from sklearn.metrics import confusion_matrix, adjusted_rand_score, f1_score
 from sklearn.cluster import AgglomerativeClustering
 
@@ -27,52 +33,44 @@ from sklearn.cluster import AgglomerativeClustering
 # ---------------------------------------------------------------------------
 DATA_DIR        = Path("./data")
 LABELS_DIR      = Path("./Cleaned_Data")
-OUTPUT_DIR      = Path("./results")
+OUTPUT_DIR      = Path("./results_labelprop")
 
-# LabelSpreading hyperparameters
-ALPHA           = 0.5   # clamping factor (0 = hard labels, 1 = fully diffused)
+# LabelPropagation hyperparameters
+# Note: no alpha — labeled nodes are always hard-clamped
 N_NEIGHBOURS    = 7     # KNN kernel neighbours
-MAX_ITER        = 500
-TOL             = 1e-4
+MAX_ITER        = 1000  # LP can need more iterations than LS
+TOL             = 1e-3
 N_JOBS          = -1
 
 # Unknown class handling
 CONFIDENCE_THRESHOLD = 0.6
 UNKNOWN_LABEL        = 19
 
-# Leave-one-out evaluation: fraction of known labels to mask per run
-LOO_FRACTION = 0.2   # hold out 20% of known labels per repeat
+# Leave-one-out evaluation
+LOO_FRACTION = 0.2
 LOO_SEED     = 42
-LOO_REPEATS  = 5     # number of random splits to average over (reduces noise)
+LOO_REPEATS  = 5
 
 # ---------------------------------------------------------------------------
 # HC size limit
 # Set SKIP_HC_LARGE = True  to skip HC for matrices with n > HC_MAX_SIZE
-#                            (faster, good for running through Kiro/CI)
-# Set SKIP_HC_LARGE = False to always run HC regardless of matrix size
-#                            (slower, use when running locally for full results)
+# Set SKIP_HC_LARGE = False to always run HC (slower, use locally)
 # ---------------------------------------------------------------------------
-SKIP_HC_LARGE = False
+SKIP_HC_LARGE = True
 HC_MAX_SIZE   = 2000
 
 # ---------------------------------------------------------------------------
 # Hyperparameter tuning
-# Set RUN_HYPERPARAMETER_TUNING = True to run the grid search before the
-# main loop. Results are saved to OUTPUT_DIR/hyperparam_tuning.csv and a
-# heatmap is saved to OUTPUT_DIR/hyperparam_heatmap.png.
-#
-# Tuning uses LOO accuracy averaged across all batches that have enough
-# labeled samples (>= MIN_LABELS_FOR_TUNING).
+# Set RUN_HYPERPARAMETER_TUNING = True to run grid search first.
+# Only k (and gamma for RBF) are tuned — alpha does not exist in LP.
 # ---------------------------------------------------------------------------
 RUN_HYPERPARAMETER_TUNING = True
 
-TUNE_ALPHAS      = [0.1, 0.2, 0.3, 0.5, 0.7, 0.9]
 TUNE_N_NEIGHBORS = [3, 5, 7, 10, 15, 20]
-# Optionally also tune the kernel; set to ["knn"] to keep it fixed
-TUNE_KERNELS     = ["knn"]   # add "rbf" here if you want to compare kernels
+TUNE_KERNELS     = ["knn"]   # add "rbf" to compare kernels
 TUNE_GAMMAS      = [1, 3, 5, 7, 10]   # only used when "rbf" is in TUNE_KERNELS
 
-MIN_LABELS_FOR_TUNING = 10   # skip batches with fewer known labels when tuning
+MIN_LABELS_FOR_TUNING = 10
 
 
 # ---------------------------------------------------------------------------
@@ -100,12 +98,14 @@ def load_known_labels(path: Path, idr_names: np.ndarray, unlabeled_value: int = 
     return y
 
 
-def run_label_spreading(A, y, alpha=ALPHA, n_neighbors=N_NEIGHBOURS,
-                        kernel="knn", gamma=5,
-                        max_iter=MAX_ITER, tol=TOL, n_jobs=N_JOBS):
+def run_label_propagation(A, y, n_neighbors=N_NEIGHBOURS,
+                          kernel="knn", gamma=5,
+                          max_iter=MAX_ITER, tol=TOL, n_jobs=N_JOBS):
+    """
+    Run LabelPropagation. No alpha parameter — labeled nodes are hard-clamped.
+    """
     kwargs = dict(
         kernel=kernel,
-        alpha=alpha,
         max_iter=max_iter,
         tol=tol,
         n_jobs=n_jobs,
@@ -115,7 +115,7 @@ def run_label_spreading(A, y, alpha=ALPHA, n_neighbors=N_NEIGHBOURS,
     elif kernel == "rbf":
         kwargs["gamma"] = gamma
 
-    model = LabelSpreading(**kwargs)
+    model = LabelPropagation(**kwargs)
     model.fit(A, y)
     proba   = model.label_distributions_
     classes = model.classes_
@@ -148,29 +148,21 @@ def build_results_df(idr_names, y_known, predicted_labels, final_labels,
 
 
 # ---------------------------------------------------------------------------
-# Evaluation: leave-one-out accuracy
+# Evaluation: repeated random holdout
 # ---------------------------------------------------------------------------
 
 def loo_accuracy(A, y, fraction=LOO_FRACTION, seed=LOO_SEED,
                  n_repeats=LOO_REPEATS, **kwargs):
     """
-    Repeated random holdout evaluation.
+    Repeated random holdout. Masks `fraction` of known labels `n_repeats`
+    times and averages macro-F1 and accuracy across repeats.
 
-    Masks `fraction` of known labels `n_repeats` times (different random
-    splits each time), runs LabelSpreading on each, and returns the mean
-    macro-F1 and accuracy across repeats.
-
-    Using macro-F1 as the primary metric because class 6 dominates the label
-    distribution (~76% of labeled IDRs). Accuracy alone would reward a model
-    that just predicts class 6 for everything. Macro-F1 weights all classes
-    equally regardless of size.
-
-    Returns (mean_f1, mean_acc, y_true_all, y_pred_all)
-        where y_true_all / y_pred_all are concatenated across all repeats
-        (useful for building a confusion matrix).
+    LabelPropagation LOO note: masking a labeled node sets it to -1
+    (unlabeled), so LP treats it as a free node and propagates through it
+    normally. The evaluation is valid — we're testing whether the graph
+    neighborhood recovers the correct label.
     """
     labeled_idx = np.where(y != -1)[0]
-
     if len(labeled_idx) < 5:
         return None, None, None, None
 
@@ -185,12 +177,11 @@ def loo_accuracy(A, y, fraction=LOO_FRACTION, seed=LOO_SEED,
         y_masked = y.copy()
         y_masked[hold_idx] = -1
 
-        _, pred, _ = run_label_spreading(A, y_masked, **kwargs)
+        _, pred, _ = run_label_propagation(A, y_masked, **kwargs)
 
         y_true = y[hold_idx]
         y_pred = pred[hold_idx]
 
-        # macro-F1: unweighted mean across classes present in y_true
         f1  = f1_score(y_true, y_pred, average="macro", zero_division=0)
         acc = (y_true == y_pred).mean()
 
@@ -204,25 +195,18 @@ def loo_accuracy(A, y, fraction=LOO_FRACTION, seed=LOO_SEED,
 
 
 # ---------------------------------------------------------------------------
-# Hyperparameter tuning
+# Hyperparameter tuning (k and gamma only — no alpha in LabelPropagation)
 # ---------------------------------------------------------------------------
 
 def tune_hyperparameters(pairs):
     """
-    Grid search over TUNE_ALPHAS x TUNE_N_NEIGHBORS (x TUNE_KERNELS).
-    For each combination, runs LOO accuracy on every batch that has at least
-    MIN_LABELS_FOR_TUNING known labels, then averages across batches.
-
-    Saves results to OUTPUT_DIR/hyperparam_tuning.csv and plots a heatmap
-    (one per kernel) to OUTPUT_DIR/hyperparam_heatmap_<kernel>.png.
-
-    Returns the best (alpha, n_neighbors, kernel, gamma) tuple.
+    Grid search over TUNE_N_NEIGHBORS (x TUNE_KERNELS / TUNE_GAMMAS).
+    Weighted mean macro-F1 across batches, weighted by labeled sample count.
     """
     print("\n" + "="*60)
-    print("Hyperparameter tuning")
+    print("Hyperparameter tuning (LabelPropagation — no alpha)")
     print("="*60)
 
-    # Pre-load all matrices and labels (skip batches with too few labels)
     datasets = []
     for aff_path, label_path, batch in pairs:
         idr_names, A = load_affinity_matrix(aff_path)
@@ -235,39 +219,31 @@ def tune_hyperparameters(pairs):
 
     if not datasets:
         print("  No batches with enough labels for tuning. Skipping.")
-        return ALPHA, N_NEIGHBOURS, "knn", 5
+        return N_NEIGHBOURS, "knn", 5
 
-    records = []
-
-    # Build full parameter grid
     param_grid = []
     for kernel in TUNE_KERNELS:
         if kernel == "knn":
-            for alpha, k in itertools.product(TUNE_ALPHAS, TUNE_N_NEIGHBORS):
-                param_grid.append({"kernel": kernel, "alpha": alpha,
-                                   "n_neighbors": k, "gamma": None})
+            for k in TUNE_N_NEIGHBORS:
+                param_grid.append({"kernel": kernel, "n_neighbors": k, "gamma": None})
         elif kernel == "rbf":
-            for alpha, gamma in itertools.product(TUNE_ALPHAS, TUNE_GAMMAS):
-                param_grid.append({"kernel": kernel, "alpha": alpha,
-                                   "n_neighbors": None, "gamma": gamma})
+            for gamma in TUNE_GAMMAS:
+                param_grid.append({"kernel": kernel, "n_neighbors": None, "gamma": gamma})
 
+    records = []
     total = len(param_grid)
+
     for idx, params in enumerate(param_grid):
         kernel = params["kernel"]
-        alpha  = params["alpha"]
         k      = params["n_neighbors"]
         gamma  = params["gamma"]
+        label  = (f"kernel={kernel}, " +
+                  (f"k={k}" if kernel == "knn" else f"gamma={gamma}"))
 
-        label = (f"kernel={kernel}, alpha={alpha}, "
-                 + (f"k={k}" if kernel == "knn" else f"gamma={gamma}"))
-
-        accs = []
-        f1s  = []
-        weights = []
+        f1s, accs, weights = [], [], []
         for batch, A, y in datasets:
             f1, acc, _, _ = loo_accuracy(
                 A, y,
-                alpha=alpha,
                 n_neighbors=k if k is not None else N_NEIGHBOURS,
                 kernel=kernel,
                 gamma=gamma if gamma is not None else 5,
@@ -276,14 +252,12 @@ def tune_hyperparameters(pairs):
                 n_jobs=N_JOBS,
             )
             if f1 is not None:
-                n_labeled = int((y != -1).sum())
                 f1s.append(f1)
                 accs.append(acc)
-                weights.append(n_labeled)
+                weights.append(int((y != -1).sum()))
 
-        # Weighted mean by number of labeled samples per batch
         if f1s:
-            w = np.array(weights, dtype=float)
+            w        = np.array(weights, dtype=float)
             mean_f1  = float(np.average(f1s,  weights=w))
             mean_acc = float(np.average(accs, weights=w))
         else:
@@ -297,46 +271,44 @@ def tune_hyperparameters(pairs):
     results_df.to_csv(csv_path, index=False)
     print(f"\n  Saved tuning results to {csv_path}")
 
-    # Plot heatmap(s) — one per kernel
+    # Heatmap — for KNN it's a 1D bar since there's no alpha axis
     for kernel in TUNE_KERNELS:
-        sub = results_df[results_df["kernel"] == kernel]
+        sub = results_df[results_df["kernel"] == kernel].copy()
         if kernel == "knn":
-            pivot = sub.pivot(index="alpha", columns="n_neighbors",
-                              values="mean_macro_f1")
-            xlabel, ylabel = "n_neighbors", "alpha"
+            fig, ax = plt.subplots(figsize=(max(6, len(sub)), 4))
+            ax.bar(sub["n_neighbors"].astype(str), sub["mean_macro_f1"],
+                   color="steelblue")
+            ax.set_xlabel("n_neighbors")
+            ax.set_ylabel("Weighted mean macro-F1")
+            ax.set_title(f"Hyperparameter tuning — LabelPropagation, kernel={kernel}\n"
+                         f"({LOO_REPEATS} repeats, weighted by labeled count)")
         else:
-            pivot = sub.pivot(index="alpha", columns="gamma",
-                              values="mean_macro_f1")
-            xlabel, ylabel = "gamma", "alpha"
+            fig, ax = plt.subplots(figsize=(max(6, len(sub)), 4))
+            ax.bar(sub["gamma"].astype(str), sub["mean_macro_f1"],
+                   color="steelblue")
+            ax.set_xlabel("gamma")
+            ax.set_ylabel("Weighted mean macro-F1")
+            ax.set_title(f"Hyperparameter tuning — LabelPropagation, kernel={kernel}")
 
-        fig, ax = plt.subplots(figsize=(max(6, len(pivot.columns)), max(4, len(pivot))))
-        sns.heatmap(pivot, annot=True, fmt=".3f", cmap="YlGnBu",
-                    cbar_kws={"label": "Weighted mean macro-F1"}, ax=ax)
-        ax.set_xlabel(xlabel)
-        ax.set_ylabel(ylabel)
-        ax.set_title(f"Hyperparameter tuning — kernel={kernel}\n"
-                     f"(macro-F1, {LOO_REPEATS} repeats, weighted by labeled count)")
         plt.tight_layout()
-        heatmap_path = OUTPUT_DIR / f"hyperparam_heatmap_{kernel}.png"
+        heatmap_path = OUTPUT_DIR / f"hyperparam_tuning_{kernel}.png"
         plt.savefig(heatmap_path, dpi=150)
         plt.close()
-        print(f"  Saved tuning heatmap to {heatmap_path}")
+        print(f"  Saved tuning plot to {heatmap_path}")
 
-    # Pick best params by macro-F1
-    best_row = results_df.loc[results_df["mean_macro_f1"].idxmax()]
-    best_alpha  = best_row["alpha"]
+    best_row    = results_df.loc[results_df["mean_macro_f1"].idxmax()]
     best_k      = best_row["n_neighbors"]
     best_kernel = best_row["kernel"]
     best_gamma  = best_row["gamma"]
-    print(f"\n  Best params: kernel={best_kernel}, alpha={best_alpha}, "
+    print(f"\n  Best params: kernel={best_kernel}, "
           + (f"k={best_k}" if best_kernel == "knn" else f"gamma={best_gamma}")
           + f"  (macro-F1 = {best_row['mean_macro_f1']:.3f}, acc = {best_row['mean_acc']:.3f})")
 
-    return best_alpha, best_k, best_kernel, best_gamma
+    return best_k, best_kernel, best_gamma
 
 
 # ---------------------------------------------------------------------------
-# Visualization helpers
+# Visualization helpers (identical to GraphModel_03)
 # ---------------------------------------------------------------------------
 
 def plot_heatmap(A, results_df, output_path, label_column="final_label", title=""):
@@ -422,11 +394,7 @@ def plot_class_distribution(results_df, output_path, batch_name=""):
     plt.close()
 
 
-def plot_hierarchical_vs_label_spreading(A, results_df, output_path, batch_name=""):
-    """
-    Compare LabelSpreading assignments to hierarchical clustering via ARI.
-    Skipped for large matrices when SKIP_HC_LARGE is True.
-    """
+def plot_hierarchical_vs_label_propagation(A, results_df, output_path, batch_name=""):
     n = len(A)
     if SKIP_HC_LARGE and n > HC_MAX_SIZE:
         print(f"  Skipping HC comparison for {batch_name} (n={n} > {HC_MAX_SIZE}, SKIP_HC_LARGE=True)")
@@ -443,17 +411,17 @@ def plot_hierarchical_vs_label_spreading(A, results_df, output_path, batch_name=
     )
     hc_labels = hc.fit_predict(D)
 
-    ls_labels = results_df["final_label"].to_numpy()
-    ari = adjusted_rand_score(hc_labels, ls_labels)
+    lp_labels = results_df["final_label"].to_numpy()
+    ari = adjusted_rand_score(hc_labels, lp_labels)
 
     fig, ax = plt.subplots(figsize=(7, 5))
-    scatter = ax.scatter(hc_labels, ls_labels,
+    scatter = ax.scatter(hc_labels, lp_labels,
                          c=results_df["max_proba"].to_numpy(),
                          cmap="viridis", alpha=0.4, s=10)
-    plt.colorbar(scatter, ax=ax, label="LS confidence")
+    plt.colorbar(scatter, ax=ax, label="LP confidence")
     ax.set_xlabel("Hierarchical clustering label")
-    ax.set_ylabel("LabelSpreading final label")
-    ax.set_title(f"{batch_name} — HC vs LS  (ARI = {ari:.3f})")
+    ax.set_ylabel("LabelPropagation final label")
+    ax.set_title(f"{batch_name} — HC vs LP  (ARI = {ari:.3f})")
     plt.tight_layout()
     plt.savefig(output_path, dpi=150)
     plt.close()
@@ -489,19 +457,16 @@ def main():
     if not pairs:
         raise RuntimeError("No matching data/label pairs found.")
 
-    # --- Optional hyperparameter tuning ---
-    # Runs before the main loop and updates ALPHA / N_NEIGHBOURS if enabled.
-    alpha      = ALPHA
     n_neighbors = N_NEIGHBOURS
-    kernel     = "knn"
-    gamma      = 5
+    kernel      = "knn"
+    gamma       = 5
 
     if RUN_HYPERPARAMETER_TUNING:
-        alpha, n_neighbors, kernel, gamma = tune_hyperparameters(pairs)
-        print(f"\nUsing tuned params: kernel={kernel}, alpha={alpha}, "
+        n_neighbors, kernel, gamma = tune_hyperparameters(pairs)
+        print(f"\nUsing tuned params: kernel={kernel}, "
               + (f"n_neighbors={n_neighbors}" if kernel == "knn" else f"gamma={gamma}"))
     else:
-        print(f"\nUsing fixed params: kernel={kernel}, alpha={alpha}, n_neighbors={n_neighbors}")
+        print(f"\nUsing fixed params: kernel={kernel}, n_neighbors={n_neighbors}")
 
     all_results    = []
     loo_y_true_all = []
@@ -523,7 +488,7 @@ def main():
         # --- Leave-one-out accuracy ---
         f1, acc, yt, yp = loo_accuracy(
             A, y,
-            alpha=alpha, n_neighbors=n_neighbors, kernel=kernel, gamma=gamma,
+            n_neighbors=n_neighbors, kernel=kernel, gamma=gamma,
             max_iter=MAX_ITER, tol=TOL, n_jobs=N_JOBS,
         )
         if f1 is not None:
@@ -539,8 +504,8 @@ def main():
             print("  Skipping LOO (too few labeled samples)")
 
         # --- Full run ---
-        model, predicted_labels, max_proba = run_label_spreading(
-            A, y, alpha=alpha, n_neighbors=n_neighbors,
+        model, predicted_labels, max_proba = run_label_propagation(
+            A, y, n_neighbors=n_neighbors,
             kernel=kernel, gamma=gamma, max_iter=MAX_ITER, tol=TOL, n_jobs=N_JOBS,
         )
         final_labels = derive_final_labels(predicted_labels, max_proba)
@@ -565,14 +530,14 @@ def main():
                                 OUTPUT_DIR / f"{batch}_class_dist.png",
                                 batch_name=batch)
 
-        ari = plot_hierarchical_vs_label_spreading(
+        ari = plot_hierarchical_vs_label_propagation(
             A, results_df,
-            OUTPUT_DIR / f"{batch}_hc_vs_ls.png",
+            OUTPUT_DIR / f"{batch}_hc_vs_lp.png",
             batch_name=batch,
         )
         ari_scores[batch] = ari
         if ari is not None:
-            print(f"  ARI (HC vs LS): {ari:.3f}")
+            print(f"  ARI (HC vs LP): {ari:.3f}")
 
     # --- Aggregate results ---
     combined_df = pd.concat(all_results, ignore_index=True)
@@ -586,14 +551,14 @@ def main():
             np.array(loo_y_true_all),
             np.array(loo_y_pred_all),
             OUTPUT_DIR / "global_confusion.png",
-            title="Global LOO confusion matrix (all batches)"
+            title="Global LOO confusion matrix — LabelPropagation (all batches)"
         )
         global_f1  = f1_score(loo_y_true_all, loo_y_pred_all, average="macro", zero_division=0)
         global_acc = (np.array(loo_y_true_all) == np.array(loo_y_pred_all)).mean()
         print(f"\nGlobal LOO macro-F1: {global_f1:.3f}  acc: {global_acc:.3f}")
 
     # --- ARI summary ---
-    print("\nARI scores (Hierarchical Clustering vs LabelSpreading):")
+    print("\nARI scores (Hierarchical Clustering vs LabelPropagation):")
     for batch, ari in ari_scores.items():
         if ari is not None:
             print(f"  {batch}: {ari:.3f}")
