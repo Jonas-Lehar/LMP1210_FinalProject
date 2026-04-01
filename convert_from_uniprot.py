@@ -8,7 +8,7 @@ from pathlib import Path
 # Input configuration
 # ---------------------------
 data_folder = "data"
-condensate_file = "MSA_chat_small.csv"  # or change to .xlsx below
+condensate_file = "MSA_chat_large2.csv"  # or change to .xlsx below
 output_folder = "Cleaned_Data"
 
 # Ensure output folder exists

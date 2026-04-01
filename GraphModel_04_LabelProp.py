@@ -38,7 +38,7 @@ OUTPUT_DIR      = Path("./results_labelprop")
 # LabelPropagation hyperparameters
 # Note: no alpha — labeled nodes are always hard-clamped
 N_NEIGHBOURS    = 7     # KNN kernel neighbours
-MAX_ITER        = 1000  # LP can need more iterations than LS
+MAX_ITER        = 2000  # LP can need more iterations than LS
 TOL             = 1e-3
 N_JOBS          = -1
 
@@ -67,7 +67,7 @@ HC_MAX_SIZE   = 2000
 RUN_HYPERPARAMETER_TUNING = True
 
 TUNE_N_NEIGHBORS = [3, 5, 7, 10, 15, 20]
-TUNE_KERNELS     = ["knn"]   # add "rbf" to compare kernels
+TUNE_KERNELS     = ["knn", "rbf"]   # add "rbf" to compare kernels
 TUNE_GAMMAS      = [1, 3, 5, 7, 10]   # only used when "rbf" is in TUNE_KERNELS
 
 MIN_LABELS_FOR_TUNING = 10
@@ -304,7 +304,94 @@ def tune_hyperparameters(pairs):
           + (f"k={best_k}" if best_kernel == "knn" else f"gamma={best_gamma}")
           + f"  (macro-F1 = {best_row['mean_macro_f1']:.3f}, acc = {best_row['mean_acc']:.3f})")
 
+    plot_tuning_curves(results_df)
+
     return best_k, best_kernel, best_gamma
+
+
+# ---------------------------------------------------------------------------
+# Hyperparameter tuning curve plots
+# ---------------------------------------------------------------------------
+
+def plot_tuning_curves(results_df: pd.DataFrame):
+    """
+    For each kernel, produce one line plot per metric (macro-F1 and accuracy)
+    as a function of the primary hyperparameter:
+      - KNN kernel : x-axis = n_neighbors  (no alpha in LabelPropagation,
+                     so a single line with markers per k value)
+      - RBF kernel : x-axis = gamma
+
+    Saved to OUTPUT_DIR/tuning_curve_<kernel>_<metric>.png
+    """
+    metrics = [
+        ("mean_macro_f1", "Weighted mean macro-F1", "macro-F1"),
+        ("mean_acc",      "Weighted mean accuracy",  "Accuracy"),
+    ]
+
+    for kernel in results_df["kernel"].unique():
+        sub = results_df[results_df["kernel"] == kernel].copy()
+
+        if kernel == "knn":
+            x_col   = "n_neighbors"
+            x_label = "Number of neighbours (k)"
+        else:
+            x_col   = "gamma"
+            x_label = "RBF gamma"
+
+        x_vals = sorted(sub[x_col].unique())
+
+        for metric_col, metric_ylabel, metric_short in metrics:
+            fig, ax = plt.subplots(figsize=(8, 5))
+
+            grp = sub.sort_values(x_col)
+            ax.plot(
+                grp[x_col].tolist(),
+                grp[metric_col].tolist(),
+                marker="o",
+                linewidth=2,
+                markersize=8,
+                color="steelblue",
+                label=metric_short,
+            )
+
+            # Annotate each point with its value
+            for _, row in grp.iterrows():
+                ax.annotate(
+                    f"{row[metric_col]:.3f}",
+                    xy=(row[x_col], row[metric_col]),
+                    xytext=(0, 8),
+                    textcoords="offset points",
+                    ha="center",
+                    fontsize=8,
+                )
+
+            # Mark the best point
+            best_idx = sub[metric_col].idxmax()
+            best_x   = sub.loc[best_idx, x_col]
+            best_y   = sub.loc[best_idx, metric_col]
+            ax.scatter([best_x], [best_y], s=150, zorder=5,
+                       color="red", marker="*", label=f"Best ({best_y:.3f})")
+
+            ax.set_xlabel(x_label, fontsize=12)
+            ax.set_ylabel(metric_ylabel, fontsize=12)
+            ax.set_title(
+                f"LabelPropagation — {metric_short} vs {x_col}\n"
+                f"kernel={kernel}, {LOO_REPEATS} repeats × {int(LOO_FRACTION*100)}% holdout",
+                fontsize=11,
+            )
+            ax.set_xticks(x_vals)
+            ax.set_xticklabels([str(v) for v in x_vals])
+            y_min = max(0.0, sub[metric_col].min() - 0.05)
+            y_max = min(1.0, sub[metric_col].max() + 0.05)
+            ax.set_ylim(y_min, y_max)
+            ax.legend(fontsize=9)
+            ax.grid(axis="y", linestyle="--", alpha=0.5)
+
+            plt.tight_layout()
+            out_path = OUTPUT_DIR / f"tuning_curve_{kernel}_{metric_short.replace('-','_').lower()}.png"
+            plt.savefig(out_path, dpi=150, bbox_inches="tight")
+            plt.close()
+            print(f"  Saved tuning curve to {out_path}")
 
 
 # ---------------------------------------------------------------------------

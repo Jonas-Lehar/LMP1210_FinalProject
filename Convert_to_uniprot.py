@@ -35,14 +35,14 @@ from pathlib import Path
 # ---------------------------------------------------------------------------
 
 # Path to the TXT file containing comma-separated gene names
-INPUT_TXT = "gene_names.txt"
+INPUT_TXT = "1-Pyrenoid.txt"
 
 # Condensate number to assign to this set of genes
-CONDENSATE_NUMBER = 19   # change to the correct condensate #
+CONDENSATE_NUMBER = 18   # change to the correct condensate #
 
 # Target MSA CSV to append the new row to
 # Must already exist and have the same columns as MSA_chat_small.csv
-TARGET_CSV = "MSA_chat_small.csv"
+TARGET_CSV = "MSA_chat_large2.csv"
 
 # Optional: name for the condensate (used in 'Biomolecular Condensates' column)
 CONDENSATE_NAME = ""
@@ -129,61 +129,6 @@ def build_full_entry_string(hit: dict) -> str:
 
 
 # ---------------------------------------------------------------------------
-# Build CONCATTED string
-# ---------------------------------------------------------------------------
-
-def build_concatted(gene_names: list[str]) -> tuple[str, str]:
-    """
-    For each gene name, query UniProt and build:
-      - verified_match : human-readable string  (for 'Verified Plant Match' column)
-      - concatted      : list-of-lists string   (for 'CONCATTED' column)
-
-    Returns (verified_match_str, concatted_str)
-    """
-    parts_full   = []   # for 'Verified Plant Match' column
-    parts_concat = []   # for 'CONCATTED' column
-
-    for gene in gene_names:
-        gene = gene.strip()
-        if not gene:
-            continue
-
-        print(f"  Querying UniProt for: {gene}")
-        hits = query_uniprot(gene)
-        time.sleep(API_DELAY)
-
-        full_strings = [build_full_entry_string(h) for h in hits]
-        accessions   = [h["accession"] for h in hits]
-
-        if hits:
-            print(f"    -> {len(hits)} result(s): {accessions[:3]}{'...' if len(accessions) > 3 else ''}")
-        else:
-            print(f"    -> No results found")
-
-        parts_full.append(f"'{gene}', {full_strings}")
-        parts_concat.append(f"'{gene}', {accessions}")
-
-    # Format to match the existing CONCATTED column style:
-    # ['GENE1', ['ACC1', 'ACC2'], 'GENE2', ['ACC3'], ...]
-    concat_items = []
-    full_items   = []
-    for gene in gene_names:
-        gene = gene.strip()
-        if not gene:
-            continue
-        hits       = query_uniprot(gene)
-        time.sleep(API_DELAY)
-        accessions = [h["accession"] for h in hits]
-        full_strs  = [build_full_entry_string(h) for h in hits]
-        concat_items.extend([f"'{gene}'", str(accessions)])
-        full_items.extend([f"'{gene}'", str(full_strs)])
-
-    concatted_str = "[" + ", ".join(concat_items) + "]"
-    full_str      = "[" + ", ".join(full_items) + "]"
-    return full_str, concatted_str
-
-
-# ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
 
@@ -232,7 +177,7 @@ def main():
     print(f"\nResolved {len(all_accessions)} UniProt accession(s) total.")
     print(f"Accessions: {all_accessions[:10]}{'...' if len(all_accessions) > 10 else ''}")
 
-    # --- Load target CSV and append new row ---
+    # --- Load target CSV and update the matching row ---
     csv_path = Path(TARGET_CSV)
     if not csv_path.is_file():
         raise FileNotFoundError(f"Target CSV not found: {csv_path}")
@@ -240,20 +185,33 @@ def main():
     df = pd.read_csv(csv_path)
     df.columns = df.columns.str.strip()
 
-    new_row = {col: "" for col in df.columns}
-    new_row["Condensate #"]                  = CONDENSATE_NUMBER
-    new_row["Biomolecular Condensates"]      = CONDENSATE_NAME
-    new_row["Verified Plant"]                = verified_plant_str
-    new_row["Verified Plant Match"]          = verified_match_str
-    new_row["Verified Plant Match Uniprot ID"] = concatted_str
-    # 'CONCATTED' is the column used by convert_from_uniprot.py
-    if "CONCATTED" in df.columns:
-        new_row["CONCATTED"] = concatted_str
+    # Find the row for this condensate number
+    mask = df["Condensate #"] == CONDENSATE_NUMBER
+    if not mask.any():
+        raise ValueError(
+            f"Condensate #{CONDENSATE_NUMBER} not found in {csv_path}.\n"
+            f"Available condensate numbers: {sorted(df['Condensate #'].dropna().astype(int).tolist())}"
+        )
 
-    df = pd.concat([df, pd.DataFrame([new_row])], ignore_index=True)
+    row_idx = df.index[mask][0]
+    print(f"\nUpdating row {row_idx} (Condensate #{CONDENSATE_NUMBER}) in {csv_path}")
+
+    # Update CONCATTED — this is the column read by convert_from_uniprot.py
+    if "CONCATTED" not in df.columns:
+        raise ValueError("Column 'CONCATTED' not found in target CSV.")
+    df.at[row_idx, "CONCATTED"] = concatted_str
+
+    # Also update the human-readable columns for reference
+    df.at[row_idx, "Verified Plant Match"] = verified_match_str
+    if "Verified Plant Match Uniprot ID" in df.columns:
+        df.at[row_idx, "Verified Plant Match Uniprot ID"] = concatted_str
+    if CONDENSATE_NAME:
+        df.at[row_idx, "Biomolecular Condensates"] = CONDENSATE_NAME
+
     df.to_csv(csv_path, index=False)
 
-    print(f"\nAppended new row (Condensate #{CONDENSATE_NUMBER}) to {csv_path}")
+    print(f"Updated CONCATTED for Condensate #{CONDENSATE_NUMBER}.")
+    print(f"Accessions written: {all_accessions}")
     print("Done. You can now run convert_from_uniprot.py.")
 
 

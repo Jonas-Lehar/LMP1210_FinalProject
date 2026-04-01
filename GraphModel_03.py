@@ -32,7 +32,7 @@ OUTPUT_DIR      = Path("./results")
 # LabelSpreading hyperparameters
 ALPHA           = 0.5   # clamping factor (0 = hard labels, 1 = fully diffused)
 N_NEIGHBOURS    = 7     # KNN kernel neighbours
-MAX_ITER        = 500
+MAX_ITER        = 1000
 TOL             = 1e-4
 N_JOBS          = -1
 
@@ -41,9 +41,9 @@ CONFIDENCE_THRESHOLD = 0.6
 UNKNOWN_LABEL        = 19
 
 # Leave-one-out evaluation: fraction of known labels to mask per run
-LOO_FRACTION = 0.2   # hold out 20% of known labels per repeat
+LOO_FRACTION = 0.15   # hold out 10% of known labels per repeat
 LOO_SEED     = 42
-LOO_REPEATS  = 5     # number of random splits to average over (reduces noise)
+LOO_REPEATS  = 10     # number of random splits to average over (reduces noise)
 
 # ---------------------------------------------------------------------------
 # HC size limit
@@ -69,7 +69,7 @@ RUN_HYPERPARAMETER_TUNING = True
 TUNE_ALPHAS      = [0.1, 0.2, 0.3, 0.5, 0.7, 0.9]
 TUNE_N_NEIGHBORS = [3, 5, 7, 10, 15, 20]
 # Optionally also tune the kernel; set to ["knn"] to keep it fixed
-TUNE_KERNELS     = ["knn"]   # add "rbf" here if you want to compare kernels
+TUNE_KERNELS     = ["knn", "rbf"]   # add "rbf" here if you want to compare kernels
 TUNE_GAMMAS      = [1, 3, 5, 7, 10]   # only used when "rbf" is in TUNE_KERNELS
 
 MIN_LABELS_FOR_TUNING = 10   # skip batches with fewer known labels when tuning
@@ -332,7 +332,91 @@ def tune_hyperparameters(pairs):
           + (f"k={best_k}" if best_kernel == "knn" else f"gamma={best_gamma}")
           + f"  (macro-F1 = {best_row['mean_macro_f1']:.3f}, acc = {best_row['mean_acc']:.3f})")
 
+    plot_tuning_curves(results_df)
+
     return best_alpha, best_k, best_kernel, best_gamma
+
+
+# ---------------------------------------------------------------------------
+# Hyperparameter tuning curve plots
+# ---------------------------------------------------------------------------
+
+def plot_tuning_curves(results_df: pd.DataFrame):
+    """
+    For each kernel in the results, produce one line plot per metric
+    (macro-F1 and accuracy) showing performance as a function of the
+    primary hyperparameter:
+      - KNN kernel  : x-axis = n_neighbors, one line per alpha value
+      - RBF kernel  : x-axis = gamma,       one line per alpha value
+
+    Saved to OUTPUT_DIR/tuning_curve_<kernel>_<metric>.png
+    """
+    metrics = [
+        ("mean_macro_f1", "Weighted mean macro-F1", "macro-F1"),
+        ("mean_acc",      "Weighted mean accuracy",  "Accuracy"),
+    ]
+
+    for kernel in results_df["kernel"].unique():
+        sub = results_df[results_df["kernel"] == kernel].copy()
+
+        if kernel == "knn":
+            x_col    = "n_neighbors"
+            x_label  = "Number of neighbours (k)"
+            group_col = "alpha"
+            group_label = "alpha"
+        else:
+            x_col    = "gamma"
+            x_label  = "RBF gamma"
+            group_col = "alpha"
+            group_label = "alpha"
+
+        x_vals     = sorted(sub[x_col].unique())
+        group_vals = sorted(sub[group_col].unique())
+        cmap       = plt.cm.get_cmap("tab10", len(group_vals))
+
+        for metric_col, metric_ylabel, metric_short in metrics:
+            fig, ax = plt.subplots(figsize=(8, 5))
+
+            for i, gval in enumerate(group_vals):
+                grp = sub[sub[group_col] == gval].sort_values(x_col)
+                ax.plot(
+                    grp[x_col].tolist(),
+                    grp[metric_col].tolist(),
+                    marker="o",
+                    linewidth=2,
+                    markersize=6,
+                    color=cmap(i),
+                    label=f"{group_label}={gval}",
+                )
+
+            # Mark the best point
+            best_idx = sub[metric_col].idxmax()
+            best_x   = sub.loc[best_idx, x_col]
+            best_y   = sub.loc[best_idx, metric_col]
+            ax.scatter([best_x], [best_y], s=120, zorder=5,
+                       color="red", marker="*", label=f"Best ({best_y:.3f})")
+
+            ax.set_xlabel(x_label, fontsize=12)
+            ax.set_ylabel(metric_ylabel, fontsize=12)
+            ax.set_title(
+                f"LabelSpreading — {metric_short} vs {x_col}\n"
+                f"kernel={kernel}, {LOO_REPEATS} repeats × {int(LOO_FRACTION*100)}% holdout",
+                fontsize=11,
+            )
+            ax.set_xticks(x_vals)
+            ax.set_xticklabels([str(v) for v in x_vals])
+            y_min = max(0.0, sub[metric_col].min() - 0.05)
+            y_max = min(1.0, sub[metric_col].max() + 0.05)
+            ax.set_ylim(y_min, y_max)
+            ax.legend(title=group_label, bbox_to_anchor=(1.02, 1), loc="upper left",
+                      fontsize=9, title_fontsize=9)
+            ax.grid(axis="y", linestyle="--", alpha=0.5)
+
+            plt.tight_layout()
+            out_path = OUTPUT_DIR / f"tuning_curve_{kernel}_{metric_short.replace('-','_').lower()}.png"
+            plt.savefig(out_path, dpi=150, bbox_inches="tight")
+            plt.close()
+            print(f"  Saved tuning curve to {out_path}")
 
 
 # ---------------------------------------------------------------------------
