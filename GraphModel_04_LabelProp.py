@@ -38,7 +38,7 @@ OUTPUT_DIR      = Path("./results_labelprop")
 # LabelPropagation hyperparameters
 # Note: no alpha — labeled nodes are always hard-clamped
 N_NEIGHBOURS    = 7     # KNN kernel neighbours
-MAX_ITER        = 2000  # LP can need more iterations than LS
+MAX_ITER        = 5000  # LP can need more iterations than LS
 TOL             = 1e-3
 N_JOBS          = -1
 
@@ -56,7 +56,7 @@ LOO_REPEATS  = 5
 # Set SKIP_HC_LARGE = True  to skip HC for matrices with n > HC_MAX_SIZE
 # Set SKIP_HC_LARGE = False to always run HC (slower, use locally)
 # ---------------------------------------------------------------------------
-SKIP_HC_LARGE = True
+SKIP_HC_LARGE = False
 HC_MAX_SIZE   = 2000
 
 # ---------------------------------------------------------------------------
