@@ -30,8 +30,8 @@ LABELS_DIR      = Path("./Cleaned_Data")
 OUTPUT_DIR      = Path("./results")
 
 # LabelSpreading hyperparameters
-ALPHA           = 0.5   # clamping factor (0 = hard labels, 1 = fully diffused)
-N_NEIGHBOURS    = 7     # KNN kernel neighbours
+ALPHA           = 0.9   # clamping factor (0 = hard labels, 1 = fully diffused)
+N_NEIGHBOURS    = 10    # KNN kernel neighbours
 MAX_ITER        = 1000
 TOL             = 1e-4
 N_JOBS          = -1
@@ -52,7 +52,7 @@ LOO_REPEATS  = 10     # number of random splits to average over (reduces noise)
 # Set SKIP_HC_LARGE = False to always run HC regardless of matrix size
 #                            (slower, use when running locally for full results)
 # ---------------------------------------------------------------------------
-SKIP_HC_LARGE = False
+SKIP_HC_LARGE = True
 HC_MAX_SIZE   = 2000
 
 # ---------------------------------------------------------------------------
@@ -64,13 +64,12 @@ HC_MAX_SIZE   = 2000
 # Tuning uses LOO accuracy averaged across all batches that have enough
 # labeled samples (>= MIN_LABELS_FOR_TUNING).
 # ---------------------------------------------------------------------------
-RUN_HYPERPARAMETER_TUNING = True
+RUN_HYPERPARAMETER_TUNING = False
 
 TUNE_ALPHAS      = [0.1, 0.2, 0.3, 0.5, 0.7, 0.9]
 TUNE_N_NEIGHBORS = [3, 5, 7, 10, 15, 20]
-# Optionally also tune the kernel; set to ["knn"] to keep it fixed
-TUNE_KERNELS     = ["knn", "rbf"]   # add "rbf" here if you want to compare kernels
-TUNE_GAMMAS      = [1, 3, 5, 7, 10]   # only used when "rbf" is in TUNE_KERNELS
+TUNE_KERNELS     = ["knn"]
+TUNE_GAMMAS      = [1, 3, 5, 7, 10]
 
 MIN_LABELS_FOR_TUNING = 10   # skip batches with fewer known labels when tuning
 
