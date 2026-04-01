@@ -1,0 +1,165 @@
+============================================================
+Hyperparameter tuning
+============================================================
+  Skipping 351_400 for tuning (only 8 labeled samples)
+  Skipping 401_450 for tuning (only 2 labeled samples)
+  [1/66] kernel=knn, alpha=0.1, k=3  ->  macro-F1 = 0.148  acc = 0.333
+  [2/66] kernel=knn, alpha=0.1, k=5  ->  macro-F1 = 0.166  acc = 0.281
+  [3/66] kernel=knn, alpha=0.1, k=7  ->  macro-F1 = 0.164  acc = 0.266
+  [4/66] kernel=knn, alpha=0.1, k=10  ->  macro-F1 = 0.167  acc = 0.269
+  [5/66] kernel=knn, alpha=0.1, k=15  ->  macro-F1 = 0.179  acc = 0.287
+  [6/66] kernel=knn, alpha=0.1, k=20  ->  macro-F1 = 0.183  acc = 0.290
+  [7/66] kernel=knn, alpha=0.2, k=3  ->  macro-F1 = 0.153  acc = 0.334
+  [8/66] kernel=knn, alpha=0.2, k=5  ->  macro-F1 = 0.158  acc = 0.264
+  [9/66] kernel=knn, alpha=0.2, k=7  ->  macro-F1 = 0.166  acc = 0.267
+  [10/66] kernel=knn, alpha=0.2, k=10  ->  macro-F1 = 0.164  acc = 0.265
+  [11/66] kernel=knn, alpha=0.2, k=15  ->  macro-F1 = 0.177  acc = 0.285
+  [12/66] kernel=knn, alpha=0.2, k=20  ->  macro-F1 = 0.181  acc = 0.287
+  [13/66] kernel=knn, alpha=0.3, k=3  ->  macro-F1 = 0.167  acc = 0.336
+  [14/66] kernel=knn, alpha=0.3, k=5  ->  macro-F1 = 0.154  acc = 0.256
+  [15/66] kernel=knn, alpha=0.3, k=7  ->  macro-F1 = 0.169  acc = 0.271
+  [16/66] kernel=knn, alpha=0.3, k=10  ->  macro-F1 = 0.166  acc = 0.269
+  [17/66] kernel=knn, alpha=0.3, k=15  ->  macro-F1 = 0.181  acc = 0.292
+  [18/66] kernel=knn, alpha=0.3, k=20  ->  macro-F1 = 0.181  acc = 0.287
+  [19/66] kernel=knn, alpha=0.5, k=3  ->  macro-F1 = 0.162  acc = 0.324
+  [20/66] kernel=knn, alpha=0.5, k=5  ->  macro-F1 = 0.156  acc = 0.253
+  [21/66] kernel=knn, alpha=0.5, k=7  ->  macro-F1 = 0.169  acc = 0.276
+  [22/66] kernel=knn, alpha=0.5, k=10  ->  macro-F1 = 0.168  acc = 0.277
+  [23/66] kernel=knn, alpha=0.5, k=15  ->  macro-F1 = 0.180  acc = 0.293
+  [24/66] kernel=knn, alpha=0.5, k=20  ->  macro-F1 = 0.168  acc = 0.271
+  [25/66] kernel=knn, alpha=0.7, k=3  ->  macro-F1 = 0.161  acc = 0.322
+  [26/66] kernel=knn, alpha=0.7, k=5  ->  macro-F1 = 0.161  acc = 0.262
+  [27/66] kernel=knn, alpha=0.7, k=7  ->  macro-F1 = 0.173  acc = 0.287
+  [28/66] kernel=knn, alpha=0.7, k=10  ->  macro-F1 = 0.175  acc = 0.287
+  [29/66] kernel=knn, alpha=0.7, k=15  ->  macro-F1 = 0.169  acc = 0.277
+  [30/66] kernel=knn, alpha=0.7, k=20  ->  macro-F1 = 0.165  acc = 0.270
+  [31/66] kernel=knn, alpha=0.9, k=3  ->  macro-F1 = 0.161  acc = 0.322
+  [32/66] kernel=knn, alpha=0.9, k=5  ->  macro-F1 = 0.164  acc = 0.272
+  [33/66] kernel=knn, alpha=0.9, k=7  ->  macro-F1 = 0.174  acc = 0.289
+  [34/66] kernel=knn, alpha=0.9, k=10  ->  macro-F1 = 0.182  acc = 0.301
+  [35/66] kernel=knn, alpha=0.9, k=15  ->  macro-F1 = 0.168  acc = 0.278
+  [36/66] kernel=knn, alpha=0.9, k=20  ->  macro-F1 = 0.175  acc = 0.290
+  [37/66] kernel=rbf, alpha=0.1, gamma=1  ->  macro-F1 = 0.169  acc = 0.321
+  [38/66] kernel=rbf, alpha=0.1, gamma=3  ->  macro-F1 = 0.134  acc = 0.349
+  [39/66] kernel=rbf, alpha=0.1, gamma=5  ->  macro-F1 = 0.097  acc = 0.321
+  [40/66] kernel=rbf, alpha=0.1, gamma=7  ->  macro-F1 = 0.092  acc = 0.313
+  [41/66] kernel=rbf, alpha=0.1, gamma=10  ->  macro-F1 = 0.092  acc = 0.313
+  [42/66] kernel=rbf, alpha=0.2, gamma=1  ->  macro-F1 = 0.168  acc = 0.319
+  [43/66] kernel=rbf, alpha=0.2, gamma=3  ->  macro-F1 = 0.144  acc = 0.355
+  [44/66] kernel=rbf, alpha=0.2, gamma=5  ->  macro-F1 = 0.097  acc = 0.321
+  [45/66] kernel=rbf, alpha=0.2, gamma=7  ->  macro-F1 = 0.092  acc = 0.313
+  [46/66] kernel=rbf, alpha=0.2, gamma=10  ->  macro-F1 = 0.092  acc = 0.313
+  [47/66] kernel=rbf, alpha=0.3, gamma=1  ->  macro-F1 = 0.166  acc = 0.317
+  [48/66] kernel=rbf, alpha=0.3, gamma=3  ->  macro-F1 = 0.142  acc = 0.349
+  [49/66] kernel=rbf, alpha=0.3, gamma=5  ->  macro-F1 = 0.097  acc = 0.321
+  [50/66] kernel=rbf, alpha=0.3, gamma=7  ->  macro-F1 = 0.092  acc = 0.313
+  [51/66] kernel=rbf, alpha=0.3, gamma=10  ->  macro-F1 = 0.092  acc = 0.313
+  [52/66] kernel=rbf, alpha=0.5, gamma=1  ->  macro-F1 = 0.166  acc = 0.316
+  [53/66] kernel=rbf, alpha=0.5, gamma=3  ->  macro-F1 = 0.142  acc = 0.349
+  [54/66] kernel=rbf, alpha=0.5, gamma=5  ->  macro-F1 = 0.097  acc = 0.321
+  [55/66] kernel=rbf, alpha=0.5, gamma=7  ->  macro-F1 = 0.092  acc = 0.313
+  [56/66] kernel=rbf, alpha=0.5, gamma=10  ->  macro-F1 = 0.092  acc = 0.313
+  [57/66] kernel=rbf, alpha=0.7, gamma=1  ->  macro-F1 = 0.166  acc = 0.316
+  [58/66] kernel=rbf, alpha=0.7, gamma=3  ->  macro-F1 = 0.142  acc = 0.349
+  [59/66] kernel=rbf, alpha=0.7, gamma=5  ->  macro-F1 = 0.097  acc = 0.321
+  [60/66] kernel=rbf, alpha=0.7, gamma=7  ->  macro-F1 = 0.092  acc = 0.313
+  [61/66] kernel=rbf, alpha=0.7, gamma=10  ->  macro-F1 = 0.092  acc = 0.313
+  [62/66] kernel=rbf, alpha=0.9, gamma=1  ->  macro-F1 = 0.166  acc = 0.316
+  [63/66] kernel=rbf, alpha=0.9, gamma=3  ->  macro-F1 = 0.142  acc = 0.349
+  [64/66] kernel=rbf, alpha=0.9, gamma=5  ->  macro-F1 = 0.097  acc = 0.321
+  [65/66] kernel=rbf, alpha=0.9, gamma=7  ->  macro-F1 = 0.092  acc = 0.313
+  [66/66] kernel=rbf, alpha=0.9, gamma=10  ->  macro-F1 = 0.092  acc = 0.313
+
+  Saved tuning results to results\hyperparam_tuning.csv
+  Saved tuning heatmap to results\hyperparam_heatmap_knn.png
+  Saved tuning heatmap to results\hyperparam_heatmap_rbf.png
+
+  Best params: kernel=knn, alpha=0.1, k=20.0  (macro-F1 = 0.183, acc = 0.290)
+f:\Sync\CloudJonas\UofT\Courses\LMP 1210 - Intro to Machine Learning\Assignments\05 - Final Project\LMP1210_FinalProject\GraphModel_03.py:375: MatplotlibDeprecationWarning: The get_cmap function was deprecated in Matplotlib 3.7 and will be removed in 3.11. Use ``matplotlib.colormaps[name]`` or ``matplotlib.colormaps.get_cmap()`` or ``pyplot.get_cmap()`` instead.
+  cmap       = plt.cm.get_cmap("tab10", len(group_vals))
+  Saved tuning curve to results\tuning_curve_knn_macro_f1.png
+  Saved tuning curve to results\tuning_curve_knn_accuracy.png
+f:\Sync\CloudJonas\UofT\Courses\LMP 1210 - Intro to Machine Learning\Assignments\05 - Final Project\LMP1210_FinalProject\GraphModel_03.py:375: MatplotlibDeprecationWarning: The get_cmap function was deprecated in Matplotlib 3.7 and will be removed in 3.11. Use ``matplotlib.colormaps[name]`` or ``matplotlib.colormaps.get_cmap()`` or ``pyplot.get_cmap()`` instead.
+  cmap       = plt.cm.get_cmap("tab10", len(group_vals))
+  Saved tuning curve to results\tuning_curve_rbf_macro_f1.png
+  Saved tuning curve to results\tuning_curve_rbf_accuracy.png
+
+Using tuned params: kernel=knn, alpha=0.1, n_neighbors=20.0
+
+============================================================
+Batch: 100_150
+  Affinity : data\100_150.csv
+  Labels   : Cleaned_Data\100_150_test.csv
+  IDRs: 3740  |  Labeled: 81
+  LOO macro-F1 (10 repeats, 15% held out): 0.171  acc: 0.267
+  ARI (HC vs LS): 0.002
+
+============================================================
+Batch: 151_200
+  Affinity : data\151_200.csv
+  Labels   : Cleaned_Data\151_200_test.csv
+  IDRs: 1767  |  Labeled: 51
+  LOO macro-F1 (10 repeats, 15% held out): 0.179  acc: 0.329
+  ARI (HC vs LS): 0.002
+
+============================================================
+Batch: 201_250
+  Affinity : data\201_250.csv
+  Labels   : Cleaned_Data\201_250_test.csv
+  IDRs: 1027  |  Labeled: 29
+  LOO macro-F1 (10 repeats, 15% held out): 0.417  acc: 0.525
+  ARI (HC vs LS): 0.004
+
+============================================================
+Batch: 251_300
+  Affinity : data\251_300.csv
+  Labels   : Cleaned_Data\251_300_test.csv
+  IDRs: 591  |  Labeled: 17
+  LOO macro-F1 (10 repeats, 15% held out): 0.167  acc: 0.250
+  ARI (HC vs LS): -0.003
+
+============================================================
+Batch: 301_350
+  Affinity : data\301_350.csv
+  Labels   : Cleaned_Data\301_350_test.csv
+  IDRs: 393  |  Labeled: 15
+  LOO macro-F1 (10 repeats, 15% held out): 0.267  acc: 0.400
+  ARI (HC vs LS): 0.005
+
+============================================================
+Batch: 351_400
+  Affinity : data\351_400.csv
+  Labels   : Cleaned_Data\351_400_test.csv
+  IDRs: 282  |  Labeled: 8
+  LOO macro-F1 (10 repeats, 15% held out): 0.100  acc: 0.100
+  ARI (HC vs LS): -0.005
+
+============================================================
+Batch: 401_450
+  Affinity : data\401_450.csv
+  Labels   : Cleaned_Data\401_450_test.csv
+  IDRs: 163  |  Labeled: 2
+  Skipping LOO (too few labeled samples)
+  ARI (HC vs LS): 0.006
+
+============================================================
+Batch: 50_99
+  Affinity : data\50_99.csv
+  Labels   : Cleaned_Data\50_99_test.csv
+  IDRs: 8889  |  Labeled: 157
+  LOO macro-F1 (10 repeats, 15% held out): 0.141  acc: 0.239
+  ARI (HC vs LS): 0.001
+
+Wrote combined results to results\all_results.csv
+
+Global LOO macro-F1: 0.121  acc: 0.284
+
+ARI scores (Hierarchical Clustering vs LabelSpreading):
+  100_150: 0.002
+  151_200: 0.002
+  201_250: 0.004
+  251_300: -0.003
+  301_350: 0.005
+  351_400: -0.005
+  401_450: 0.006
+  50_99: 0.001

@@ -1,0 +1,157 @@
+======================================================================
+BATCH ANALYSIS REPORT
+======================================================================
+
+GLOBAL SUMMARY
+----------------------------------------
+  Total batches          : 8
+  Total IDRs             : 16,852
+  Total labeled IDRs     : 360
+  Global label density   : 2.14%
+  Classes represented    : [1, 2, 3, 4, 5, 6, 7, 8, 10, 11, 14, 15, 16, 17, 18]
+  Classes missing        : [9, 12, 13]
+
+GLOBAL CLASS DISTRIBUTION
+----------------------------------------
+  Class  1:  111 IDRs  (30.8%)
+  Class  2:   81 IDRs  (22.5%)
+  Class  3:   10 IDRs  (2.8%)
+  Class  4:    2 IDRs  (0.6%)
+  Class  5:   15 IDRs  (4.2%)
+  Class  6:   57 IDRs  (15.8%)
+  Class  7:   30 IDRs  (8.3%)
+  Class  8:    3 IDRs  (0.8%)
+  Class 10:    7 IDRs  (1.9%)
+  Class 11:    9 IDRs  (2.5%)
+  Class 14:   17 IDRs  (4.7%)
+  Class 15:    3 IDRs  (0.8%)
+  Class 16:    3 IDRs  (0.8%)
+  Class 17:   11 IDRs  (3.1%)
+  Class 18:    1 IDRs  (0.3%)
+
+PER-BATCH STATISTICS
+----------------------------------------
+
+  Batch: 100_150
+    Total IDRs         : 3,740
+    Labeled IDRs       : 81  (2.17%)
+    Unlabeled IDRs     : 3,659
+    Classes present    : 13  [1, 2, 3, 5, 6, 7, 8, 10, 11, 14, 15, 16, 17]
+    Dominant class     : 1  (25.93% of labels)
+    Imbalance ratio    : 21.0x  (max/min class count)
+    Balance ratio      : 0.801  (0=worst, 1=perfect)
+    Class entropy      : 2.963 bits
+    Class counts       : {1: 21, 2: 16, 3: 4, 5: 2, 6: 16, 7: 9, 8: 1, 10: 2, 11: 1, 14: 4, 15: 1, 16: 1, 17: 3}
+    Affinity stats     : skipped (matrix too large)
+
+  Batch: 151_200
+    Total IDRs         : 1,767
+    Labeled IDRs       : 51  (2.89%)
+    Unlabeled IDRs     : 1,716
+    Classes present    : 10  [1, 2, 3, 5, 6, 7, 11, 14, 15, 17]
+    Dominant class     : 1  (35.29% of labels)
+    Imbalance ratio    : 18.0x  (max/min class count)
+    Balance ratio      : 0.825  (0=worst, 1=perfect)
+    Class entropy      : 2.742 bits
+    Class counts       : {1: 18, 2: 10, 3: 2, 5: 1, 6: 7, 7: 4, 11: 3, 14: 2, 15: 1, 17: 3}
+    Affinity mean      : 4.0851
+    Affinity std       : 4.5959
+    Affinity 5th pct   : -3.0719
+    Affinity 95th pct  : 11.4325
+
+  Batch: 201_250
+    Total IDRs         : 1,027
+    Labeled IDRs       : 29  (2.82%)
+    Unlabeled IDRs     : 998
+    Classes present    : 6  [1, 2, 5, 7, 14, 16]
+    Dominant class     : 1  (34.48% of labels)
+    Imbalance ratio    : 10.0x  (max/min class count)
+    Balance ratio      : 0.84  (0=worst, 1=perfect)
+    Class entropy      : 2.170 bits
+    Class counts       : {1: 10, 2: 10, 5: 2, 7: 3, 14: 3, 16: 1}
+    Affinity mean      : 5.1060
+    Affinity std       : 5.3686
+    Affinity 5th pct   : -3.4083
+    Affinity 95th pct  : 13.7192
+
+  Batch: 251_300
+    Total IDRs         : 591
+    Labeled IDRs       : 17  (2.88%)
+    Unlabeled IDRs     : 574
+    Classes present    : 7  [1, 2, 3, 6, 7, 15, 17]
+    Dominant class     : 2  (41.18% of labels)
+    Imbalance ratio    : 7.0x  (max/min class count)
+    Balance ratio      : 0.835  (0=worst, 1=perfect)
+    Class entropy      : 2.343 bits
+    Class counts       : {1: 2, 2: 7, 3: 1, 6: 4, 7: 1, 15: 1, 17: 1}
+    Affinity mean      : 6.3245
+    Affinity std       : 6.0628
+    Affinity 5th pct   : -3.3074
+    Affinity 95th pct  : 16.1905
+
+  Batch: 301_350
+    Total IDRs         : 393
+    Labeled IDRs       : 15  (3.82%)
+    Unlabeled IDRs     : 378
+    Classes present    : 6  [1, 2, 5, 6, 7, 8]
+    Dominant class     : 2  (33.33% of labels)
+    Imbalance ratio    : 5.0x  (max/min class count)
+    Balance ratio      : 0.935  (0=worst, 1=perfect)
+    Class entropy      : 2.416 bits
+    Class counts       : {1: 2, 2: 5, 5: 2, 6: 2, 7: 3, 8: 1}
+    Affinity mean      : 8.3935
+    Affinity std       : 7.4494
+    Affinity 5th pct   : -3.7776
+    Affinity 95th pct  : 20.0485
+
+  Batch: 351_400
+    Total IDRs         : 282
+    Labeled IDRs       : 8  (2.84%)
+    Unlabeled IDRs     : 274
+    Classes present    : 5  [1, 2, 6, 7, 14]
+    Dominant class     : 2  (25.0% of labels)
+    Imbalance ratio    : 2.0x  (max/min class count)
+    Balance ratio      : 0.969  (0=worst, 1=perfect)
+    Class entropy      : 2.250 bits
+    Class counts       : {1: 1, 2: 2, 6: 1, 7: 2, 14: 2}
+    Affinity mean      : 9.4943
+    Affinity std       : 7.9706
+    Affinity 5th pct   : -2.6402
+    Affinity 95th pct  : 22.9990
+
+  Batch: 401_450
+    Total IDRs         : 163
+    Labeled IDRs       : 2  (1.23%)
+    Unlabeled IDRs     : 161
+    Classes present    : 2  [1, 2]
+    Dominant class     : 1  (50.0% of labels)
+    Imbalance ratio    : 1.0x  (max/min class count)
+    Balance ratio      : 1.0  (0=worst, 1=perfect)
+    Class entropy      : 1.000 bits
+    Class counts       : {1: 1, 2: 1}
+    Affinity mean      : 9.6637
+    Affinity std       : 9.3854
+    Affinity 5th pct   : -6.9195
+    Affinity 95th pct  : 24.2146
+
+  Batch: 50_99
+    Total IDRs         : 8,889
+    Labeled IDRs       : 157  (1.77%)
+    Unlabeled IDRs     : 8,732
+    Classes present    : 14  [1, 2, 3, 4, 5, 6, 7, 8, 10, 11, 14, 16, 17, 18]
+    Dominant class     : 1  (35.67% of labels)
+    Imbalance ratio    : 56.0x  (max/min class count)
+    Balance ratio      : 0.741  (0=worst, 1=perfect)
+    Class entropy      : 2.821 bits
+    Class counts       : {1: 56, 2: 30, 3: 3, 4: 2, 5: 8, 6: 27, 7: 8, 8: 1, 10: 5, 11: 5, 14: 6, 16: 1, 17: 4, 18: 1}
+    Affinity stats     : skipped (matrix too large)
+
+======================================================================
+NOTES
+----------------------------------------
+  Balance ratio: Shannon entropy of class distribution normalised
+  by log2(n_classes). 1.0 = perfectly uniform, 0.0 = single class.
+  Imbalance ratio: count of largest class / count of smallest class.
+  Affinity stats computed on off-diagonal values only.
+  Batches with >3000 IDRs skipped for affinity stats (runtime).
+======================================================================
