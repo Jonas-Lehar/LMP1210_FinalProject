@@ -111,7 +111,7 @@ def run_label_propagation(A, y, n_neighbors=N_NEIGHBOURS,
         n_jobs=n_jobs,
     )
     if kernel == "knn":
-        kwargs["n_neighbors"] = n_neighbors
+        kwargs["n_neighbors"] = int(n_neighbors)
     elif kernel == "rbf":
         kwargs["gamma"] = gamma
 
