@@ -30,8 +30,8 @@ LABELS_DIR      = Path("./Cleaned_Data")
 OUTPUT_DIR      = Path("./results")
 
 # LabelSpreading hyperparameters
-ALPHA           = 0.9   # clamping factor (0 = hard labels, 1 = fully diffused)
-N_NEIGHBOURS    = 10    # KNN kernel neighbours
+ALPHA           = 0.1   # clamping factor (0 = hard labels, 1 = fully diffused)
+N_NEIGHBOURS    = 20    # KNN kernel neighbours
 MAX_ITER        = 1000
 TOL             = 1e-4
 N_JOBS          = -1
@@ -52,7 +52,7 @@ LOO_REPEATS  = 10     # number of random splits to average over (reduces noise)
 # Set SKIP_HC_LARGE = False to always run HC regardless of matrix size
 #                            (slower, use when running locally for full results)
 # ---------------------------------------------------------------------------
-SKIP_HC_LARGE = True
+SKIP_HC_LARGE = False
 HC_MAX_SIZE   = 2000
 
 # ---------------------------------------------------------------------------
