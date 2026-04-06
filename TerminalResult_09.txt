@@ -1,0 +1,164 @@
+> 06_KNN preprocessing, but this time with the -/+ switched. No stdscaler
+
+
+============================================================
+Hyperparameter tuning — explicit KNN graph sparsification
+============================================================
+  Skipping 351_400 for tuning (too few labels)
+  Skipping 401_450 for tuning (too few labels)
+C:\Users\mekha\miniconda3\envs\ml_course\Lib\site-packages\threadpoolctl.py:1226: RuntimeWarning:
+Found Intel OpenMP ('libiomp') and LLVM OpenMP ('libomp') loaded at
+the same time. Both libraries are known to be incompatible and this
+can cause random crashes or deadlocks on Linux when loaded in the
+same Python program.
+Using threadpoolctl may cause crashes or deadlocks. For more
+information and possible workarounds, please see
+    https://github.com/joblib/threadpoolctl/blob/master/multiple_openmp.md
+
+  warnings.warn(msg, RuntimeWarning)
+  [1/32] k_graph=5, alpha=0.1, k_spread=10  ->  macro-F1 = 0.169  acc = 0.334
+  [2/32] k_graph=5, alpha=0.1, k_spread=20  ->  macro-F1 = 0.169  acc = 0.334
+  [3/32] k_graph=5, alpha=0.3, k_spread=10  ->  macro-F1 = 0.174  acc = 0.326
+  [4/32] k_graph=5, alpha=0.3, k_spread=20  ->  macro-F1 = 0.174  acc = 0.326
+  [5/32] k_graph=5, alpha=0.7, k_spread=10  ->  macro-F1 = 0.171  acc = 0.308
+  [6/32] k_graph=5, alpha=0.7, k_spread=20  ->  macro-F1 = 0.171  acc = 0.308
+  [7/32] k_graph=5, alpha=0.9, k_spread=10  ->  macro-F1 = 0.174  acc = 0.308
+  [8/32] k_graph=5, alpha=0.9, k_spread=20  ->  macro-F1 = 0.174  acc = 0.308
+  [9/32] k_graph=10, alpha=0.1, k_spread=10  ->  macro-F1 = 0.172  acc = 0.312
+  [10/32] k_graph=10, alpha=0.1, k_spread=20  ->  macro-F1 = 0.172  acc = 0.312
+  [11/32] k_graph=10, alpha=0.3, k_spread=10  ->  macro-F1 = 0.175  acc = 0.312
+  [12/32] k_graph=10, alpha=0.3, k_spread=20  ->  macro-F1 = 0.175  acc = 0.312
+  [13/32] k_graph=10, alpha=0.7, k_spread=10  ->  macro-F1 = 0.182  acc = 0.314
+  [14/32] k_graph=10, alpha=0.7, k_spread=20  ->  macro-F1 = 0.182  acc = 0.314
+  [15/32] k_graph=10, alpha=0.9, k_spread=10  ->  macro-F1 = 0.168  acc = 0.302
+  [16/32] k_graph=10, alpha=0.9, k_spread=20  ->  macro-F1 = 0.168  acc = 0.302
+  [17/32] k_graph=15, alpha=0.1, k_spread=10  ->  macro-F1 = 0.212  acc = 0.359
+  [18/32] k_graph=15, alpha=0.1, k_spread=20  ->  macro-F1 = 0.235  acc = 0.372
+  [19/32] k_graph=15, alpha=0.3, k_spread=10  ->  macro-F1 = 0.209  acc = 0.356
+  [20/32] k_graph=15, alpha=0.3, k_spread=20  ->  macro-F1 = 0.239  acc = 0.388
+  [21/32] k_graph=15, alpha=0.7, k_spread=10  ->  macro-F1 = 0.210  acc = 0.364
+  [22/32] k_graph=15, alpha=0.7, k_spread=20  ->  macro-F1 = 0.233  acc = 0.374
+  [23/32] k_graph=15, alpha=0.9, k_spread=10  ->  macro-F1 = 0.215  acc = 0.372
+  [24/32] k_graph=15, alpha=0.9, k_spread=20  ->  macro-F1 = 0.231  acc = 0.380
+  [25/32] k_graph=20, alpha=0.1, k_spread=10  ->  macro-F1 = 0.173  acc = 0.310
+  [26/32] k_graph=20, alpha=0.1, k_spread=20  ->  macro-F1 = 0.201  acc = 0.317
+  [27/32] k_graph=20, alpha=0.3, k_spread=10  ->  macro-F1 = 0.174  acc = 0.308
+  [28/32] k_graph=20, alpha=0.3, k_spread=20  ->  macro-F1 = 0.192  acc = 0.316
+  [29/32] k_graph=20, alpha=0.7, k_spread=10  ->  macro-F1 = 0.173  acc = 0.307
+  [30/32] k_graph=20, alpha=0.7, k_spread=20  ->  macro-F1 = 0.189  acc = 0.315
+  [31/32] k_graph=20, alpha=0.9, k_spread=10  ->  macro-F1 = 0.184  acc = 0.319
+  [32/32] k_graph=20, alpha=0.9, k_spread=20  ->  macro-F1 = 0.184  acc = 0.307
+
+  Best: k_graph=15, alpha=0.3, k_spread=20  (macro-F1=0.239, acc=0.388)
+
+Using tuned params: k_graph=15, alpha=0.3, k_spread=20
+
+============================================================
+Batch: 100_150
+  IDRs: 3740  |  Labeled: 81  |  k_graph: 15
+  LOO macro-F1: 0.188  acc: 0.250
+  ARI (HC vs LS): 0.001
+
+============================================================
+Batch: 151_200
+  IDRs: 1767  |  Labeled: 51  |  k_graph: 15
+  LOO macro-F1: 0.244  acc: 0.400
+  ARI (HC vs LS): -0.002
+
+============================================================
+Batch: 201_250
+  IDRs: 1027  |  Labeled: 29  |  k_graph: 15
+  LOO macro-F1: 0.528  acc: 0.650
+  ARI (HC vs LS): 0.003
+
+============================================================
+Batch: 251_300
+  IDRs: 591  |  Labeled: 17  |  k_graph: 15
+  LOO macro-F1: 0.133  acc: 0.200
+  ARI (HC vs LS): 0.000
+
+============================================================
+Batch: 301_350
+  IDRs: 393  |  Labeled: 15  |  k_graph: 15
+  LOO macro-F1: 0.267  acc: 0.400
+  ARI (HC vs LS): 0.006
+
+============================================================
+Batch: 351_400
+  IDRs: 282  |  Labeled: 8  |  k_graph: 15
+  LOO macro-F1: 0.000  acc: 0.000
+  ARI (HC vs LS): -0.018
+
+============================================================
+Batch: 401_450
+  IDRs: 163  |  Labeled: 2  |  k_graph: 15
+  Skipping LOO (too few labeled samples)
+  ARI (HC vs LS): 0.205
+
+============================================================
+Batch: 50_99
+  IDRs: 8889  |  Labeled: 157  |  k_graph: 15
+  LOO macro-F1: 0.220  acc: 0.426
+  ARI (HC vs LS): 0.002
+
+Wrote combined results to results_knngraph\all_results.csv
+Global LOO macro-F1: 0.180  acc: 0.380
+
+  Generating accuracy summary plot...
+  Saved accuracy_summary.png
+
+ARI scores:
+  100_150: 0.001
+  151_200: -0.002
+  201_250: 0.003
+  251_300: 0.000
+  301_350: 0.006
+  351_400: -0.018
+  401_450: 0.205
+  50_99: 0.002
+
+  Running LOO fraction sensitivity analysis...
+
+============================================================
+LOO fraction sensitivity analysis
+============================================================
+  100_150  frac=0.10  macro-F1=0.240  acc=0.388
+  100_150  frac=0.15  macro-F1=0.188  acc=0.250
+  100_150  frac=0.20  macro-F1=0.162  acc=0.231
+  100_150  frac=0.25  macro-F1=0.167  acc=0.265
+  100_150  frac=0.30  macro-F1=0.148  acc=0.250
+  151_200  frac=0.10  macro-F1=0.195  acc=0.300
+  151_200  frac=0.15  macro-F1=0.244  acc=0.400
+  151_200  frac=0.20  macro-F1=0.136  acc=0.280
+  151_200  frac=0.25  macro-F1=0.183  acc=0.325
+  151_200  frac=0.30  macro-F1=0.257  acc=0.407
+  201_250  frac=0.10  macro-F1=0.467  acc=0.500
+  201_250  frac=0.15  macro-F1=0.528  acc=0.650
+  201_250  frac=0.20  macro-F1=0.470  acc=0.600
+  201_250  frac=0.25  macro-F1=0.385  acc=0.571
+  201_250  frac=0.30  macro-F1=0.446  acc=0.625
+  251_300  frac=0.10  macro-F1=0.100  acc=0.100
+  251_300  frac=0.15  macro-F1=0.133  acc=0.200
+  251_300  frac=0.20  macro-F1=0.122  acc=0.200
+  251_300  frac=0.25  macro-F1=0.080  acc=0.175
+  251_300  frac=0.30  macro-F1=0.066  acc=0.160
+  301_350  frac=0.10  macro-F1=0.600  acc=0.600
+  301_350  frac=0.15  macro-F1=0.267  acc=0.400
+  301_350  frac=0.20  macro-F1=0.231  acc=0.300
+  301_350  frac=0.25  macro-F1=0.231  acc=0.300
+  301_350  frac=0.30  macro-F1=0.282  acc=0.350
+  351_400  frac=0.10  macro-F1=0.000  acc=0.000
+  351_400  frac=0.15  macro-F1=0.000  acc=0.000
+  351_400  frac=0.20  macro-F1=0.000  acc=0.000
+  351_400  frac=0.25  macro-F1=0.033  acc=0.050
+  351_400  frac=0.30  macro-F1=0.033  acc=0.050
+  Skipping 401_450 (only 2 labeled samples)
+  50_99  frac=0.10  macro-F1=0.213  acc=0.400
+  50_99  frac=0.15  macro-F1=0.220  acc=0.426
+  50_99  frac=0.20  macro-F1=0.148  acc=0.348
+  50_99  frac=0.25  macro-F1=0.142  acc=0.362
+  50_99  frac=0.30  macro-F1=0.149  acc=0.330
+C:\Users\mekha\Documents\Jonas - Bioinformatics\LMP1210_FinalProject\GraphModel_06_KNNGraph.py:337: MatplotlibDeprecationWarning: The get_cmap function was deprecated in Matplotlib 3.7 and will be removed in 3.11. Use ``matplotlib.colormaps[name]`` or ``matplotlib.colormaps.get_cmap()`` or ``pyplot.get_cmap()`` instead.
+  cmap      = plt.cm.get_cmap("tab10", len(batches))
+  Saved loo_sensitivity_f1.png
+  Saved loo_sensitivity_acc.png

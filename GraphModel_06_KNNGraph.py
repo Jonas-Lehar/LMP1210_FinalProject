@@ -43,7 +43,7 @@ MAX_ITER     = 1000
 TOL          = 1e-4
 N_JOBS       = -1
 
-CONFIDENCE_THRESHOLD = 0.6
+CONFIDENCE_THRESHOLD = 0.8
 UNKNOWN_LABEL        = 19
 
 LOO_FRACTION = 0.15
@@ -102,7 +102,9 @@ def load_affinity_matrix(path: Path):
     df = pd.read_csv(path, index_col=0)
     idr_names = df.index.to_numpy()
     A = df.to_numpy(dtype=float)
-    A = 0.5 * (A + A.T)
+    # Negate: FINCHES scores are negative for attraction, positive for repulsion.
+    # We flip the sign so that high values = high affinity, as LabelSpreading expects.
+    A = -A
     np.fill_diagonal(A, 0.0)
     return idr_names, A
 
@@ -498,7 +500,10 @@ def plot_hc_vs_ls(A, results_df, output_path, batch_name=""):
     if SKIP_HC_LARGE and n > HC_MAX_SIZE:
         print(f"  Skipping HC for {batch_name} (n={n})")
         return None
-    D = 1.0 - np.clip(A, 0, 1)
+    # Convert affinity to distance: shift so min=0, then invert
+    A_shifted = A - A.min()
+    A_norm = A_shifted / A_shifted.max() if A_shifted.max() > 0 else A_shifted
+    D = 1.0 - A_norm
     np.fill_diagonal(D, 0.0)
     n_clusters = len(results_df["final_label"].unique())
     from sklearn.cluster import AgglomerativeClustering
