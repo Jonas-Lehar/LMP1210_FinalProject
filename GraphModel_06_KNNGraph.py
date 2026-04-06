@@ -389,13 +389,15 @@ def plot_accuracy_summary(batch_loo: dict, global_f1: float, global_acc: float,
     """
     Two grouped bar charts (macro-F1 and accuracy) — one bar per batch plus
     a global bar — built from the LOO scores collected during the main loop.
+    Batches are ordered from largest to smallest by n_labeled, then GLOBAL.
 
     batch_loo: {batch: {"f1": float, "acc": float, "n_labeled": int}}
     """
-    batches   = list(batch_loo.keys())
-    f1s       = [batch_loo[b]["f1"]  for b in batches]
-    accs      = [batch_loo[b]["acc"] for b in batches]
-    n_labels  = [batch_loo[b]["n_labeled"] for b in batches]
+    # Sort batches by n_labeled descending
+    batches  = sorted(batch_loo.keys(), key=lambda b: batch_loo[b]["n_labeled"], reverse=True)
+    f1s      = [batch_loo[b]["f1"]  for b in batches]
+    accs     = [batch_loo[b]["acc"] for b in batches]
+    n_labels = [batch_loo[b]["n_labeled"] for b in batches]
 
     # Append global
     all_labels = batches + ["GLOBAL"]
