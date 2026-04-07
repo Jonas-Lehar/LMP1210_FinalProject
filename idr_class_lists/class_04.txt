@@ -1,0 +1,12 @@
+F4IRU3_middle_1071_1134
+O64602_middle_344_424
+F4JCB2_middle_245_330
+F4KG14_middle_949_1022
+Q9SLK6_middle_476_525
+Q8LPQ1_middle_98_174
+Q9M0B8_C-terminal_323_373
+A0A1P8B0K8_N-terminal_1_55
+Q9LVR4_N-terminal_1_60
+F4ICB6_N-terminal_1_88
+F4I2I5_middle_898_976
+F4HTF3_N-terminal_1_99

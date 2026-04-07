@@ -1,0 +1,14 @@
+Q949Q5_N-terminal_1_58
+Q9C4Z7_N-terminal_1_77
+Q9SEU8_N-terminal_1_78
+Q9LYA9_N-terminal_1_76
+O50039_N-terminal_1_69
+Q84W65_N-terminal_1_80
+Q9M0Q7_C-terminal_84_154
+Q944G6_N-terminal_1_82
+Q96255_N-terminal_1_73
+Q9ZU25_N-terminal_1_60
+Q9LU86_N-terminal_1_77
+Q93WG3_N-terminal_1_73
+Q9SMS8_C-terminal_84_154
+A0JQ18_IDP_1_73

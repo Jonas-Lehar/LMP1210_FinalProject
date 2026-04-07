@@ -572,7 +572,12 @@ def main():
     df = load_results(results_csv)
     df = label_status(df)
 
-    batches = sorted(df["batch"].unique())
+    # Sort batches in ascending IDR length order
+    batch_order = ["50_99", "100_150", "151_200", "201_250",
+                   "251_300", "301_350", "351_400", "401_450"]
+    present = set(df["batch"].unique())
+    batches = [b for b in batch_order if b in present] + \
+              sorted(present - set(batch_order))
     print(f"Batches found: {batches}\n")
 
     # --- Global figures ---
