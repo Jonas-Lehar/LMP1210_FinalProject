@@ -1,0 +1,77 @@
+(ml_course) C:\Users\jonas\LMP1210\LMP1210_FinalProject>python GraphModel_08_GridSearch.py
+Found 3 priority batch(es): ['100_150', '151_200', '50_99']
+
+Preprocessing check on 100_150:
+  Raw range:       [-47.421, 88.786]
+  After prep:      [0.000, 1.000]
+  % zeros:         83.5%
+  % negative:      0.0%  (should be 0)
+
+============================================================
+Grid search — corrected preprocessing (flip+clip+minmax)
+Batches: ['100_150', '151_200', '50_99']
+============================================================
+  Loaded 100_150: 3740 IDRs, 81 labeled
+  Loaded 151_200: 1767 IDRs, 51 labeled
+  Loaded 50_99: 8889 IDRs, 157 labeled
+
+Running 75 combos × 4 conf thresholds in parallel (N_PARALLEL_JOBS=12)...
+[Parallel(n_jobs=12)]: Using backend LokyBackend with 12 concurrent workers.
+[Parallel(n_jobs=12)]: Done  48 tasks      | elapsed: 30.5min
+[Parallel(n_jobs=12)]: Done  68 out of  75 | elapsed: 42.3min remaining:  4.4min
+[Parallel(n_jobs=12)]: Done  75 out of  75 | elapsed: 43.7min finished
+
+  Saved full grid results to results_gridsearch_08\grid_search_results.csv
+
+Generating grid search figures...
+  Saved conf_threshold_tradeoff.png
+  Saved normalization_comparison.png
+
+============================================================
+Best hyperparameters
+============================================================
+  row_norm       = none
+  k_graph        = 25
+  alpha          = 0.5
+  conf_threshold = 0.8
+  macro-F1       = 0.197
+  accuracy       = 0.330
+  mean conf (assigned) = 0.922
+  % unlabeled assigned = 47.5%
+
+============================================================
+Full run with best params
+  row_norm=none, k_graph=25, alpha=0.5, conf=0.8
+============================================================
+
+Batch: 100_150
+  IDRs: 3740  |  Labeled: 81
+  LOO macro-F1: 0.264  acc: 0.367
+  Newly assigned: 1638  |  Mean confidence: 0.928
+  ARI (HC vs LS): 0.005
+
+Batch: 151_200
+  IDRs: 1767  |  Labeled: 51
+  LOO macro-F1: 0.287  acc: 0.457
+  Newly assigned: 864  |  Mean confidence: 0.917
+  ARI (HC vs LS): -0.005
+
+Batch: 50_99
+  IDRs: 8889  |  Labeled: 157
+  LOO macro-F1: 0.134  acc: 0.270
+  Newly assigned: 4110  |  Mean confidence: 0.930
+  Skipping HC for 50_99 (n=8889, too large)
+
+Wrote combined results to results_gridsearch_08\all_results.csv
+Global LOO macro-F1: 0.151  acc: 0.329
+  Saved accuracy_summary.png
+
+ARI scores:
+  100_150: 0.005
+  151_200: -0.005
+  50_99: skipped
+
+All outputs saved to results_gridsearch_08/
+
+To generate post-run analysis figures run:
+  python analysis_results.py --results results_gridsearch_08/all_results.csv --output results_analysis_08

@@ -39,8 +39,8 @@ PRIORITY_BATCHES = {"50_99", "100_150", "151_200"}
 
 MAX_ITER = 1000
 TOL      = 1e-4
-# N_JOBS for the outer parallel loop (uses all cores)
-N_PARALLEL_JOBS = -1
+# N_JOBS for the outer parallel loop — physical core count for CPU-bound work
+N_PARALLEL_JOBS = 12
 # N_JOBS inside LabelSpreading — keep at 1 to avoid nested parallelism
 LS_N_JOBS = 1
 
@@ -285,7 +285,7 @@ def run_grid_search(pairs):
 
     # joblib dispatches each combo to a worker process
     # prefer="threads" avoids pickling large numpy arrays across processes
-    nested_records = Parallel(n_jobs=N_PARALLEL_JOBS, prefer="threads", verbose=5)(
+    nested_records = Parallel(n_jobs=N_PARALLEL_JOBS, prefer="processes", verbose=5)(
         delayed(_evaluate_combo)(norm, k_graph, alpha, datasets)
         for norm, k_graph, alpha in prop_grid
     )
