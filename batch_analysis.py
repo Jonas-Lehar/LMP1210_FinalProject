@@ -67,7 +67,7 @@ def load_affinity_diagonal_stats(aff_path: Path):
     """
     header = pd.read_csv(aff_path, index_col=0, nrows=0)
     n = len(header.columns)
-    if n > 3000:
+    if n > 10000:
         return None   # too large, skip
 
     df = pd.read_csv(aff_path, index_col=0)
@@ -357,7 +357,7 @@ def write_stats_report(all_stats, out_path: Path):
     lines.append("  by log2(n_classes). 1.0 = perfectly uniform, 0.0 = single class.")
     lines.append("  Imbalance ratio: count of largest class / count of smallest class.")
     lines.append("  Affinity stats computed on off-diagonal values only.")
-    lines.append("  Batches with >3000 IDRs skipped for affinity stats (runtime).")
+    lines.append("  Batches with >10000 IDRs skipped for affinity stats (runtime).")
     lines.append("=" * 70)
 
     out_path.write_text("\n".join(lines), encoding="utf-8")
@@ -384,6 +384,9 @@ def main():
         all_stats.append(stats)
         print(f"  {n_total:,} IDRs, {stats['n_labeled']} labeled "
               f"({stats['label_density']}%), {stats['n_classes']} classes")
+
+    # Sort largest to smallest so 50_99 is leftmost in all figures
+    all_stats.sort(key=lambda s: s["n_total"], reverse=True)
 
     print("\nGenerating figures...")
     plot_label_density(all_stats, OUTPUT_DIR)

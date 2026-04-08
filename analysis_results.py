@@ -52,7 +52,7 @@ DEFAULT_RESULTS_CSV = Path("./results/all_results.csv")
 DEFAULT_OUTPUT_DIR  = Path("./results_analysis")
 
 UNKNOWN_LABEL        = 19
-CONFIDENCE_THRESHOLD = 0.6
+CONFIDENCE_THRESHOLD = 0.8
 
 # ARI scores are not stored in all_results.csv — they are printed to stdout.
 # Paste them here manually if you want the ARI bar chart, otherwise leave
