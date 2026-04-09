@@ -347,9 +347,6 @@ def plot_accuracy_summary(batch_loo: dict, global_f1: float, global_acc: float,
     bars2 = ax.bar(x + width/2, all_accs, width, label="Accuracy",
                    color=["orange"]*len(batches) + ["#d7191c"], alpha=0.85)
 
-    for bar, n in zip(bars1, all_n):
-        ax.text(bar.get_x() + bar.get_width()/2, -0.04, f"n={n}",
-                ha="center", va="top", fontsize=7, color="dimgrey", rotation=45)
     for bar in list(bars1) + list(bars2):
         h = bar.get_height()
         if not np.isnan(h):
